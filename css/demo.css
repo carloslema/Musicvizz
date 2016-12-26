@@ -8,45 +8,10 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 }
 
-.one {
+.date {
 	font-family: 'Maven Pro', Arial;
 	font-weight: bold;
 }
-
-.project-title {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	justify-content: center;
-	position: relative;
-	font-family: 'Maven Pro', serif;
-	font-size: 2em;
-	letter-spacing: 0em;
-	font-weight: lighter;
-	margin: 0;
-	color: white;
-}
-
-.project-descrip {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	justify-content: center;
-	position: relative;
-	font-family: 'Maven Pro', serif;
-	font-size: 1.3em;
-	letter-spacing: 0em;
-	font-weight: lighter;
-	margin: 0;
-	padding: 0;
-	color: white;
-}
-
-.two {
-	font-family: 'Hind', Arial;
-	font-weight: normal;
-}
-
 a {
 	outline: none;
 	color: gray;
