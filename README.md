@@ -1,7 +1,7 @@
 # Weekly Motion Graphics
-*[http://domain.com/](http://domain.com/)*
+*[https://surayashivji.github.io/WeeklyGraphics/](https://surayashivji.github.io/WeeklyGraphics/)*
 
 
 ## List
-1. [Name *10/10/10*](https://developers.facebook.com/docs/ios/)
+1. [Name, *10/10/10*]()
 2. []()

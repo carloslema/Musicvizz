@@ -1,0 +1,151 @@
+*, *::after, *::before { -webkit-box-sizing: border-box; box-sizing: border-box; }
+
+body {
+	color: #463f51;
+	background: 	black;
+	overflow-x: hidden;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.one {
+	font-family: 'Maven Pro', Arial;
+	font-weight: bold;
+}
+
+.project-title {
+	font-family: 'Maven Pro', serif;
+	font-size: 2em;
+	letter-spacing: 0em;
+	font-weight: lighter;
+	margin: 0;
+	padding: 0;
+	color: white;
+}
+
+.project-descrip {
+	font-family: 'Maven Pro', serif;
+	font-size: 1.3em;
+	letter-spacing: 0em;
+	font-weight: lighter;
+	margin: 0;
+	padding: 0;
+	color: white;
+}
+
+.two {
+	font-family: 'Hind', Arial;
+	font-weight: normal;
+}
+
+a {
+	outline: none;
+	color: #694f9b;
+	text-decoration: none;
+	transition: color 0.2s;
+}
+
+a:hover, a:focus {
+	color: #fff;
+}
+
+.hidden {
+	position: absolute;
+	overflow: hidden;
+	width: 0;
+	height: 0;
+	pointer-events: none;
+}
+
+
+@-webkit-keyframes loaderAnim {
+	to {
+		opacity: 0.3;
+		-webkit-transform: translate3d(0,-100px,0);
+		transform: translate3d(0,-100px,0);
+	}
+}
+
+@keyframes loaderAnim {
+	to {
+		opacity: 0.3;
+		-webkit-transform: translate3d(0,-100px,0);
+		transform: translate3d(0,-100px,0);
+	}
+}
+
+.content {
+	padding: 0 0 4em;
+	height: 800px;
+	min-height: 100vh;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+}
+
+.content:not(:first-child) {
+	padding: 4em 0;
+}
+
+/* Project Title CSS */
+
+
+.js .demo-split.loading::before { background: #fff; }
+.js .demo-split.loading::after { background: #ff784a; }
+
+.contentt {
+	position: relative;
+	min-height: 300px;
+	overflow-x: hidden;
+}
+
+.content--full-t {
+	height: 100vh;
+	min-height: 600px;
+}
+
+.contentt.introt {
+	height: 93vh;
+}
+
+.flexy-t {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: column;
+	align-items: center;
+}
+
+.content__title-t {
+	font-size: 8vw;
+	line-height: 1.2;
+	padding: 0 5vw;
+}
+
+.content__title__inner-t {
+	font-family: 'Inconsolata', monospace;
+color: #141417;
+background: #d0cfc5;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+
+	flex: none;
+	display: inline-block;
+	white-space: nowrap;
+	position: relative;
+}
+
+.content__title__inner--offset-1 {
+	top: -0.25em;
+	left: 13.6vw;
+}
+
+@media screen and (max-width: 50em) {
+	.content--full-t {
+		min-height: 0;
+	}
+	.content__title-t {
+	font-size: 2em;
+}
+}
