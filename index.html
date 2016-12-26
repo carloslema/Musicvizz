@@ -23,13 +23,6 @@
       <!-- <p class="project-descrip">Motion graphic experiments posted weekly /
       <a href="index2.html">Github Source Code</a> </p> -->
 
-      <section class="contentt content--full-t flexy-t introt">
-				<h2 class="content__title-t content__title--center-t">
-					<div id="rev-1" class="content__title__inner-t">Self-imposed</div><br/>
-					<div id="rev-2" class="content__title__inner-t content__title__inner--offset-1-t">limitations</div>
-				</h2>
-			</section>
-
 			<section class="content content--c1">
 				<a href="https://www.google.com" class="tilter tilter--1">
 					<figure class="tilter__figure">
@@ -120,7 +113,7 @@
 		</main>
 		<script src="js/imagesloaded.pkgd.min.js"></script>
 		<script src="js/anime.min.js"></script>
-		<script src="js/main.js"></script>
+		<script src="js/grid.js"></script>
 		<script>
 		(function() {
 			var tiltSettings = [
@@ -319,37 +312,6 @@
 			});
 		})();
 		</script>
-<script src="js/scrollMonitor.js"></script>
-<script src="js/main_h.js"></script>
-    <script>
-(function() {
-  // Fake loading.
-  setTimeout(init, 1000);
-  function init() {
-    document.body.classList.remove('loading');
 
-    var rev1 = new RevealFx(document.querySelector('#rev-1'), {
-      revealSettings : {
-        bgcolor: '#7f40f1',
-        onCover: function(contentEl, revealerEl) {
-          contentEl.style.opacity = 1;
-        }
-      }
-    });
-    rev1.reveal();
-
-    var rev2 = new RevealFx(document.querySelector('#rev-2'), {
-      revealSettings : {
-        bgcolor: '#fcf652',
-        delay: 250,
-        onCover: function(contentEl, revealerEl) {
-          contentEl.style.opacity = 1;
-        }
-      }
-    });
-    rev2.reveal();
-  }
-})();
-</script>
 	</body>
 </html>
