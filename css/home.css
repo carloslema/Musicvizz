@@ -1,7 +1,6 @@
 *, *::after, *::before { -webkit-box-sizing: border-box; box-sizing: border-box; }
 
 body {
-	color: #463f51;
 	margin: 0;
 	background: 	black;
 	/*overflow-x: hidden;*/
@@ -14,7 +13,7 @@ body {
 
 .title-text {
 	line-height: 1.5;
-	color: #fff;
+	color: #D3D3D3;
 }
 
 .date {
@@ -203,6 +202,14 @@ a:hover, a:focus {
   margin:0 0 0 13.5%;
   line-height: 1.4;
   white-space: pre;
+}
+.mast__title-noeffect {
+	font-family: 'Maven Pro', monospace;
+  font-size: 2em;
+	margin: 3% 0 0 13.5%;
+  font-weight: 400;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
 }
 .mast__title {
 	font-family: 'Maven Pro', monospace;
