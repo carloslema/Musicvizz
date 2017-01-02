@@ -1,0 +1,10 @@
+.instructions {
+  display: block;
+  width: 100%;
+  text-align:center;
+  position: absolute;
+  margin-top: 3em;
+  font-size: 21px;
+  color: #606060;
+  font-family: 'Maven Pro';
+}

@@ -5,7 +5,7 @@
   <meta charset="UTF-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Week 1 | Spring</title>
+  <title>Week # Title</title>
   <meta name="description" content="Weekly motion graphic experiments"/>
   <meta name="keywords" content="motion, graphics, suraya, shivji, wklymotion, animation"/>
   <meta name="author" content="Suraya Shivji"/>
@@ -13,14 +13,17 @@
 
   <!-- Stylehseets -->
   <link href="https://fonts.googleapis.com/css?family=Maven+Pro" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="../../css/normalize.css"/>
-
   <link rel="stylesheet" type="text/css" href="style.css"/>
   <link rel="stylesheet" type="text/css" href="../../css/credits.css"/>
 
   <!-- Scripts -->
+  <!-- P5 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.5/p5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.5/addons/p5.sound.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.5/addons/p5.dom.js"></script>
+
+  <!-- Soundcloud -->
+  <script src='https://connect.soundcloud.com/sdk/sdk-3.0.0.js'></script>
 
   <script language="javascript" type="text/javascript" src="sketch.js"></script>
 
@@ -28,14 +31,18 @@
 
 <body>
 
-  <div class="instructions">Click any button.</div>
+<div id="guide">
+<div>Press the spacebar to begin.</div>
+<div class="volume">Volume Advised.</div>
+</div>
 
-  <div class="footer">
-    <p class="built">Built with
-      <a target="_blank" style="text-decoration:none" href="https://p5js.org/">
-        <strong><span>p5.js</span></strong></p>
-      </a>
-  </div>
+<!-- Credits -->
+<div class="footer">
+  <p class="built">Built with
+    <a target="_blank" style="text-decoration:none" href="https://p5js.org/">
+      <strong><span>p5.js</span></strong></p>
+    </a>
+</div>
 
 </body>
 </html>

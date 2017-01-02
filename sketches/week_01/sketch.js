@@ -1,92 +1,117 @@
-var CLIENT_ID = '69054bf89e340d3b5b2f5678d5b6650b';
-var TRACK_URL = '';
-
-// sketch variables
-var source;
-var streamURL;
-var flag = false;
-
-function preload() {
-  // Initialize Soundcloud API
-  SC.initialize({
-    client_id: CLIENT_ID
-  });
-  SC.resolve(TRACK_URL).then(function(track){
-    // promise resolves with JSON
-    // get stream Url from JSON
-    streamUrl = track.stream_url + '?client_id=' + CLIENT_ID;
-
-    // DEBUG: Uncomment to print the stream URL
-    // console.log("Stream Url: " + streamUrl + '\n');
-
-    // loadSound function
-    // @param streamUrl: url of the song to load
-    // @param trackReady: this is the callback function that executes
-    // when the streamUrl successfully loads into source. This is important
-    // because nothing should execute until the stream is successfully loaded
-    // @param soundError: this executes if streamUrl wasn't loaded successfully
-    source = this.loadSound(streamUrl, trackReady, soundError);
-
-    // DEBUG: Uncomment to print what the source is that you loaded (should be stream JSON)
-    // console.log("source current: " + JSON.stringify(source));
-
-  }).catch(function(error){
-    // Error in network request
-    console.log("Error getting track JSON: " + error + '\n');
-  });
-}
-
-// anything that should be in setup but should
-// only happen once the song has been loaded
-function trackReady() {
-  // song has loaded, set flag
-  flag = true;
-  // source can be played
-}
+var items = [];
+var speed = 0.15;
+var spring = 0.1;
+var numDots;
+var canvas;
+var position, target, velocity, radius;
+var animate = false, expanded = false;
 
 function setup() {
-  // visual set up - not dependent on song at all
+  canvas = createCanvas(windowWidth, windowHeight);
+  // canvas.touchStarted(clicked);
+
+  background(0, 206, 209);
+  noStroke();
+
+  // position spring in middle
+  translate(width/2, height/2);
+
+  position = new p5.Vector(0,0);
+  target = new p5.Vector(0,0);
+  velocity = new p5.Vector(0,0);
+
+  numDots = 7;
+
+  layItems();
 }
 
 function draw() {
-  // all things drawn based on music should go here
-  // flag = true --> song has been successfully loaded
-  if(flag) {
+  if(animate) {
+    fill(0, 206, 209);
+
+    // center spring
+    translate(width/2, height/2);
+    rect(-windowWidth/2,-windowHeight/2, windowWidth, windowHeight);
+
+    for(var x = 0; x < items.length; x++) {
+      // console.log("items count " + items.length);
+      var item = items[x];
+      if (expanded) {
+        target.set(0,0);
+      } else {
+        target.set(item.target.x, item.target.y);
+      }
+
+      position.set(item.posX, item.posY);
+      velocity.set(item.velocityX, item.velocityY);
+      velocity.mult(spring);
+
+      var difference = p5.Vector.sub(target, position);
+      // console.log("speed " + speed);
+      difference.mult(speed);
+      velocity.add(difference);
+      position.add(velocity);
+
+      item.posX = position.x;
+      item.posY = position.y;
+      item.velocityX = velocity.x;
+      item.velocityY = velocity.y;
+
+      item.render();
+    }
   }
 }
 
-// handle song errors
-function soundError(e) {
-  console.log('New error:');
-  console.log('- name: ' + e.name);
-  console.log('- message: ' + e.message);
-  console.log('- stack: ' + e.stack);
-  console.log('- failed path: ' + e.failedPath);
-}
-
-// Helper Functions
-
-// resize canvas on windowResized
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-}
-
-// note: in p5, keyPressed is not case sensitive. keyTyped is.
 function keyPressed() {
-  if (key == 'space') {
-    toggleSong();
+  if(keyCode != BACKSPACE && keyCode != DELETE){
+    if(!animate) {
+      // now animating
+      animate = true;
+    } else {
+      if(!expanded) {
+        expanded = true;
+      } else if (expanded) {
+        // spring opened
+        expanded = false;
+        layItems();
+      }
+    }
   }
 }
 
-// pause / play soundcloud song
-function toggleSong() {
-  if (soundFile.isPlaying() ) {
-    soundFile.pause();
-    mic.start();
-    amplitude.setInput(mic);
-  } else {
-    soundFile.play();
-    mic.stop();
-    amplitude.setInput(soundFile);
+function layItems() {
+  for(var x = 0; x < numDots; x++) {
+    // angle between dots
+    var angle = (2*PI)/numDots;
+    radius = random(100,200);
+
+    target = new p5.Vector(radius*cos(angle*x), radius*sin(angle*x));
+
+    var r = random(0, 100);
+    var rand = random(200, 255);
+    var item = new Item(position.x, position.y, target, rand);
+    items.push(item);
+    item.render();
+  }
+}
+
+// Spring Item
+function Item(positionX, positionY, t, hue) {
+  this.posX = positionX;
+  this.posY = positionY;
+
+  this.target = new p5.Vector(0,0,0);
+  this.target.set(t);
+
+  this.velocityX = 0;
+  this.velocityY = 0;
+
+  this.size = random(20,80);
+
+  this.hue = hue;
+
+  this.render = function() {
+    fill(130, 130, hue);
+    ellipse(this.posX, this.posY, this.size, this.size)
   }
 }

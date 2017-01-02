@@ -1,0 +1,19 @@
+.footer {
+  cursor: pointer;
+  position: fixed;
+  right: 30px;
+  font-size: 15px;
+  bottom: 10px;
+  margin: 0;
+  padding: 0;
+  opacity: .7;
+  color: black;
+  font-weight: 100;
+  font-family: 'Maven Pro', monospace;
+}
+.built {
+
+}
+.lib {
+
+}
