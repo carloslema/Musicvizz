@@ -7,13 +7,13 @@
 	color: #fff;
 	flex: none;
 	perspective: 1000px;
-	-webkit-filter: grayscale(100%);
-	-webkit-transition: .2s ease-in-out;
-	-moz-filter: grayscale(100%);
+	/*-webkit-filter: grayscale(25%);
+	-webkit-transition: .5s ease-in-out;
+	-moz-filter: grayscale(25%);
 	-moz-transition: .2s ease-in-out;
-	-o-filter: grayscale(100%);
+	-o-filter: grayscale(25%);
 	-o-transition: .2s ease-in-out;
-	filter: grayscale(100%);
+	filter: grayscale(25%);*/
 }
 
 .tilter * {
@@ -24,14 +24,13 @@
 .tilter:focus {
 	color: #fff;
 	outline: none;
-
-	-webkit-filter: grayscale(0%);
+	/*-webkit-filter: grayscale(0%);
 	-webkit-transition: .5s ease-in-out;
 	-moz-filter: grayscale(0%);
 	-moz-transition: .2s ease-in-out;
 	-o-filter: grayscale(0%);
 	-o-transition: .2s ease-in-out;
-	filter: grayscale(0%);
+	filter: grayscale(0%);*/
 }
 
 .tilter__figure,

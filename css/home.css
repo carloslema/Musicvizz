@@ -59,8 +59,6 @@ a:hover, a:focus {
 
 .content {
 	padding: 0 0 0em;
-	/*height: 800px;*/
-	/*min-height: 100vh;*/
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
@@ -76,7 +74,6 @@ a:hover, a:focus {
 .sep {
   border: 0;
   width: 3em;
-  /*height: 1px;*/
   margin: 1em 0;
 }
 
