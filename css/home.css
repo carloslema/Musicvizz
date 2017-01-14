@@ -40,7 +40,6 @@ a:hover, a:focus {
 	pointer-events: none;
 }
 
-
 @-webkit-keyframes loaderAnim {
 	to {
 		opacity: 0.3;
@@ -82,7 +81,6 @@ a:hover, a:focus {
   display: flex;
   align-items: center;
   width: 100%;
-  /*height: 100vh;*/
   color: #fff;
   background-color: #111;
 }
@@ -92,7 +90,6 @@ a:hover, a:focus {
   position: absolute;
   top: 0;
   left: 0;
-  /*height: 100%;*/
   width: 100%;
   background: rgba(17, 17, 17, 0.9);
 }
@@ -105,11 +102,9 @@ a:hover, a:focus {
   top: 0;
   left: 0;
   width: 100%;
-  /*height: 100vh;*/
   margin: 0;
   padding: 0;
   background-size: cover;
-  /*background-position: 50%;*/
 }
 .mast__header {
   padding: 5%;
@@ -776,4 +771,23 @@ a:hover, a:focus {
     opacity: 0.7;
     text-shadow: 0px 0px 20px rgba(255, 255, 255, 0);
   }
+}
+
+/* Responsive Title Text */
+@media only screen and (max-width: 520px) {
+	.mast__text {
+		font-family: 'Inconsolata', monospace;
+	  font-size: 0.9em;
+	  margin:0 0 0 13.5%;
+	  line-height: 1.4;
+	  white-space: pre;
+	}
+	.mast__title {
+		font-family: 'Maven Pro', monospace;
+	  font-size: 1.4em;
+		margin: 3% 0 0 13.5%;
+	  font-weight: 400;
+	  letter-spacing: 0.4em;
+	  text-transform: uppercase;
+	}
 }
