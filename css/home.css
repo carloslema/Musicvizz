@@ -778,14 +778,14 @@ a:hover, a:focus {
 	.mast__text {
 		font-family: 'Inconsolata', monospace;
 	  font-size: 0.9em;
-	  margin:0 0 0 13.5%;
+	  margin:5% 0 0 13.5%;
 	  line-height: 1.4;
 	  white-space: pre;
 	}
 	.mast__title {
 		font-family: 'Maven Pro', monospace;
 	  font-size: 1.4em;
-		margin: 3% 0 0 13.5%;
+		margin: 8% 0 0 13.5%;
 	  font-weight: 400;
 	  letter-spacing: 0.4em;
 	  text-transform: uppercase;

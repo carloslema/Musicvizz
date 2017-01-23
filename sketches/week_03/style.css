@@ -5,3 +5,7 @@
   text-align: center;
   margin-top: 5%;
 }
+#canvas {
+  height: 100%;
+  width: 100%;
+}
