@@ -4,26 +4,31 @@
   <meta charset="UTF-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Week # Title</title>
+  <title>Week 3</title>
   <meta name="description" content="Weekly motion graphic experiments"/>
-  <meta name="keywords" content="motion, graphics, suraya, shivji, wklymotion, animation"/>
+  <meta name="keywords" content="motion, graphics, suraya, shivji, wklymotion, animation, paper.js"/>
   <meta name="author" content="Suraya Shivji"/>
   <link rel="shortcut icon" href="../../favicon.png">
   <!-- Stylehseets -->
   <link href="https://fonts.googleapis.com/css?family=Maven+Pro" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="style.css"/>
-  <link rel="stylesheet" type="text/css" href="../../css/credits.css"/>
+  <link src"style.css" rel="stylesheet">
+  <script type="text/javascript" src="../../js/paper-full.min.js"></script>
+  <script type="text/paperscript" canvas="canvas" src="sketch.js"></script>
+  <style>
+  body, html {
+    /*width: 100%;*/
+    /*height: 100%;*/
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+canvas {
+    position: absolute;
+}
+  </style>
+
 </head>
 <body>
-  <div class="title"></div>
-  <canvas id="canvas" resize><canvas>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.10.2/paper-full.js'></script>
-    <script src="sketch.js"></script>
-    <div class="footer">
-      <p class="built">Built with Paper.js
-        <a target="_blank" style="text-decoration:none" href="http://paperjs.org/">
-          <strong><span>mo.js</span></strong></p>
-        </a>
-      </div>
-    </body>
-    </html>
+  <canvas id="canvas" resize></canvas>
+</body>
+</html>

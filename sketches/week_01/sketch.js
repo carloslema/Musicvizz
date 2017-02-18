@@ -8,7 +8,6 @@ var animate = false, expanded = false;
 
 function setup() {
   canvas = createCanvas(windowWidth, windowHeight);
-  // canvas.touchStarted(clicked);
 
   background(0, 206, 209);
   noStroke();
