@@ -195,6 +195,13 @@ a:hover, a:focus {
   line-height: 1.4;
   white-space: pre;
 }
+.mast__text__disabled {
+	font-family: 'Inconsolata', monospace;
+  font-size: 1.3em;
+  margin:0 0 0 13.5%;
+  line-height: 1.4;
+  white-space: pre;
+}
 .mast__title-noeffect {
 	font-family: 'Maven Pro', monospace;
   font-size: 2em;
@@ -779,6 +786,13 @@ a:hover, a:focus {
 		font-family: 'Inconsolata', monospace;
 	  font-size: 0.9em;
 	  margin:5% 0 0 13.5%;
+	  line-height: 1.4;
+	  white-space: pre;
+	}
+	.mast__text__disabled {
+		font-family: 'Inconsolata', monospace;
+	  font-size: 1em;
+	  margin:0 0 0 13.5%;
 	  line-height: 1.4;
 	  white-space: pre;
 	}
