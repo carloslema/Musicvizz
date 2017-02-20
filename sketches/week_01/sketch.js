@@ -60,23 +60,36 @@ function draw() {
     }
   }
 }
-
-function keyPressed() {
-  if(keyCode != BACKSPACE && keyCode != DELETE){
-    if(!animate) {
-      // now animating
-      animate = true;
-    } else {
-      if(!expanded) {
-        expanded = true;
-      } else if (expanded) {
-        // spring opened
-        expanded = false;
-        layItems();
-      }
+function touchStarted() {
+  if(!animate) {
+    // now animating
+    animate = true;
+  } else {
+    if(!expanded) {
+      expanded = true;
+    } else if (expanded) {
+      // spring opened
+      expanded = false;
+      layItems();
     }
   }
 }
+// function keyPressed() {
+//   if(keyCode != BACKSPACE && keyCode != DELETE){
+//     if(!animate) {
+//       // now animating
+//       animate = true;
+//     } else {
+//       if(!expanded) {
+//         expanded = true;
+//       } else if (expanded) {
+//         // spring opened
+//         expanded = false;
+//         layItems();
+//       }
+//     }
+//   }
+// }
 
 function layItems() {
   for(var x = 0; x < numDots; x++) {
