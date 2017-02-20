@@ -1,6 +1,7 @@
+// spring adapted from paperjs example
 var values = {
 	friction: 0.8,
-	timeStep: 0.01,
+	timeStep: 0.20,
 	amount: 15,
 	mass: 2,
 	count: 0
@@ -22,25 +23,25 @@ Spring.prototype.update = function() {
 	var delta = this.b - this.a;
 	var dist = delta.length;
 	var normDistStrength = (dist - this.restLength) /
-			(dist * this.mamb) * this.strength;
+	(dist * this.mamb) * this.strength;
 	delta.y *= normDistStrength * values.invMass * 0.2;
 	if (!this.a.fixed)
-		this.a.y += delta.y;
+	this.a.y += delta.y;
 	if (!this.b.fixed)
-		this.b.y -= delta.y;
+	this.b.y -= delta.y;
 };
 
 
 function createPath(strength) {
 	var path = new Path({
-		fillColor: 'black'
+		fillColor: '#ff0f39'
 	});
 	springs = [];
 	for (var i = 0; i <= values.amount; i++) {
 		var segment = path.add(new Point(i / values.amount, 0.5) * size);
 		var point = segment.point;
 		if (i == 0 || i == values.amount)
-			point.y += size.height;
+		point.y += size.height;
 		point.px = point.x;
 		point.py = point.y;
 		// The first two and last two points are fixed:
@@ -56,12 +57,14 @@ function createPath(strength) {
 
 function onResize() {
 	if (path)
-		path.remove();
+	path.remove();
 	size = view.bounds.size * [2, 1];
 	path = createPath(0.1);
 }
 
 function onMouseMove(event) {
+	path.fillColor = colorForLocation(event);
+	// path.fillColor = 'blue';
 	var location = path.getNearestLocation(event.point);
 	var segment = location.segment;
 	var point = segment.point;
@@ -99,9 +102,31 @@ function updateWave(path) {
 	path.smooth({ type: 'continuous' });
 }
 
-function onKeyDown(event) {
-	if (event.key == 'space') {
-		path.fullySelected = !path.fullySelected;
-		path.fillColor = path.fullySelected ? null : 'black';
-	}
+// Color ∆ Functions
+function componentToHex(c) {
+	var hex = c.toString(16);
+	return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgbToHex(r, g, b) {
+	return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
+function colorForLocation(event) {
+	// R = 255
+	// G = 15 to 250 (difference is 235)
+	// B = 50 to 252 (difference is 202)
+
+	var width = view.size.width - 20;
+	var xPos = event.point.x;
+
+	var numRepeatsGreen = Math.round(width/235);
+	var addGreen = (Math.floor(xPos/numRepeatsGreen)) + 15;
+	var g = addGreen <= 255 ? addGreen : 255;
+
+	var numRepeatsBlue = Math.round(width/202);
+	var addBlue = (Math.floor(xPos/numRepeatsBlue)) + 50;
+	var b = addBlue <= 255 ? addBlue : 255;
+
+	return rgbToHex(255, g, b);
 }
