@@ -1,5 +1,5 @@
 var CLIENT_ID = '69054bf89e340d3b5b2f5678d5b6650b';
-var TRACK_URL = 'https://soundcloud.com/yourpbuddy/major-lazer-be-together-p-buddy-just-in-time-remix';
+var TRACK_URL = '';
 
 // sketch variables
 var source;
