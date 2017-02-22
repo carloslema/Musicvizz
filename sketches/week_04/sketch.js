@@ -64,7 +64,6 @@ function onResize() {
 
 function onMouseMove(event) {
 	path.fillColor = colorForLocation(event);
-	// path.fillColor = 'blue';
 	var location = path.getNearestLocation(event.point);
 	var segment = location.segment;
 	var point = segment.point;
