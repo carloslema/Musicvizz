@@ -785,7 +785,7 @@ a:hover, a:focus {
 	.mast__text {
 		font-family: 'Inconsolata', monospace;
 	  font-size: 0.9em;
-	  margin:5% 0 0 13.5%;
+	  margin: 5% 0 0 13.5%;
 	  line-height: 1.4;
 	  white-space: pre;
 	}
