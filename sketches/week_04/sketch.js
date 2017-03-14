@@ -1,6 +1,6 @@
 // spring adapted from paperjs example
 var values = {
-	friction: 0.8,
+	friction: 1.44,
 	timeStep: 0.20,
 	amount: 15,
 	mass: 2,
