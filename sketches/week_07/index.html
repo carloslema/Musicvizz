@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Week 8</title>
+  <title>Week 7</title>
   <meta name="description" content="Weekly motion graphic experiments"/>
   <meta name="keywords" content="motion, graphics, suraya, shivji, wklymotion, animation"/>
   <meta name="author" content="Suraya Shivji"/>
@@ -22,6 +22,7 @@
   <style>
   html, body {
     height: 100%;
+    background-color: #000000;
   }
   body {
     margin: 0;
@@ -31,14 +32,32 @@
     /* centers sketch vertically */
     align-items: center;
   }
-  #play {
+  #play7 {
     display: block;
     width: 100%;
     text-align:center;
     position: absolute;
     font-size: 40px;
-    color: #606060;
+    color: #d3d3d3;
     font-family: 'Maven Pro';
+    padding-bottom: 450px;
+  }
+  #label7 {
+    position: relative;
+    text-align: center;
+    font-size: 22px;
+    color: #d3d3d3;
+    font-family: 'Maven Pro';
+    margin: 15px;
+  }
+  #inspiration7 {
+    position: absolute;
+  }
+  iframe {
+    display: block;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
   }
   </style>
   <script>
@@ -51,6 +70,11 @@
   </script>
 </head>
 <body>
-  <div id="play">Volume advised</div>
+  <div id="play7">Volume advised</div>
+  <div id="inspiration7">
+    <p id="label7">Inspired by</p>
+    <a target="_blank" href="http://coldplay.com/"><img src="http://www.billboard.com/files/media/Head-Full-of-Dreams-coldpay-billboard-2015-510.jpg" alt="Coldplay Head Full of Dreams" style="width:250px;height:250px;"></a>
+  </div>
+  <iframe allowtransparency="true" scrolling="no" frameborder="no" src="https://w.soundcloud.com/icon/?url=http%3A%2F%2Fsoundcloud.com%2Fundiscoveredsounds%2Fcoldplay-ft-beyonce-hymn-for-the-weekend-ash-remix&color=orange_white&size=48" style="width: 48px; height: 48px;"></iframe>
 </body>
 </html>

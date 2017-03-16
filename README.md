@@ -11,5 +11,5 @@
 
 ## Credits
 - [p5.js](https://p5js.org/)
-- [mo.js] (http://mojs.io/)
-- [paper.js] (http://paperjs.org/)
+- [mo.js](http://mojs.io/)
+- [paper.js](http://paperjs.org/)

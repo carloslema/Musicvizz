@@ -59,7 +59,8 @@ function trackReady() {
   flag = true;
   amplitude = new p5.Amplitude();
   source.play();
-  document.getElementById("play").style.visibility = "hidden"; // hide volume advisement
+  document.getElementById("play7").style.visibility = "hidden";
+  document.getElementById("inspiration7").style.visibility = "hidden";
   amplitude.setInput(source);
   amplitude.smooth(0.9);
 }

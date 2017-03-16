@@ -63,7 +63,6 @@ function draw() {
   // flag = true --> song has been successfully loaded
   if(flag) {
   var level = amplitude.getLevel();
-  console.log(level*10000)
     background('#0F1D3D')
     translate(width/2, height/2);
     for (var i = -180; i < 180; i+=3) {
