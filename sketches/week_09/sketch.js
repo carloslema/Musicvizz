@@ -1,10 +1,11 @@
 var CLIENT_ID = '69054bf89e340d3b5b2f5678d5b6650b';
-var TRACK_URL = 'https://soundcloud.com/undiscoveredsounds/coldplay-ft-beyonce-hymn-for-the-weekend-ash-remix';
+var TRACK_URL = 'https://soundcloud.com/botanicalesounds/childish-gambino-redbone-slowed-chopped';
 
-// audio variables
+// sketch variables
 var source;
 var streamURL;
 var flag = false;
+var amplitude;
 
 function preload() {
   // Initialize Soundcloud API
@@ -15,6 +16,9 @@ function preload() {
     // promise resolves with JSON
     // get stream Url from JSON
     streamUrl = track.stream_url + '?client_id=' + CLIENT_ID;
+
+    // DEBUG: Uncomment to print the stream URL
+    // console.log("Stream Url: " + streamUrl + '\n');
 
     // loadSound function
     // @param streamUrl: url of the song to load
@@ -32,34 +36,16 @@ function preload() {
   });
 }
 
-// sketch variables
-var canvas;
-var numReflections = 24;
-var x = 0;
-var u = 250;
-var y  = 250;
-var s = 16;
-var m = 10;
-var splatter = 0;
-var h = 0;
-var amplitude;
-var beatThreshold;
-
-var brush = {
-  'x': 0,
-  'y': 0,
-  'distanceFromCenter': 0,
-}
-
-
 // anything that should be in setup but should
 // only happen once the song has been loaded
 function trackReady() {
   // song has loaded, set flag
   flag = true;
   amplitude = new p5.Amplitude();
+  // source can be played, hide advisements/credits
   source.play();
-  document.getElementById("play").style.visibility = "hidden"; // hide volume advisement
+  document.getElementById("play").style.visibility = "hidden";
+  document.getElementById("inspiration").style.visibility = "hidden";
   amplitude.setInput(source);
   amplitude.smooth(0.9);
 }
@@ -67,15 +53,28 @@ function trackReady() {
 function setup() {
   // visual set up (not relating to song)
   canvas = createCanvas(windowWidth, windowHeight);
-  colorMode(HSB);
-  background(0);
+  background('#0F1D3D')
+  strokeWeight(3);
+  stroke('#42C1F4');
 }
 
 function draw() {
   // all things drawn based on music
   // flag = true --> song has been successfully loaded
   if(flag) {
-    var level = amplitude.getLevel();
+  var level = amplitude.getLevel();
+  console.log(level*10000)
+    background('#0F1D3D')
+    translate(width/2, height/2);
+    for (var i = -180; i < 180; i+=3) {
+      var angle = sin(radians(-sin(radians(i*map(level*5500, 0, width, 0, 5)))*i+frameCount*2))*40;
+      // console.log(mouseX);
+      var x = sin(radians(i))*(50-angle/3);
+      var y = cos(radians(i))*(100-angle/3);
+      var x2 = sin(radians(i))*(300-angle);
+      var y2 = cos(radians(i))*(300-angle);
+      line(x, y, x2, y2);
+    }
   }
 }
 
@@ -89,31 +88,7 @@ function soundError(e) {
 }
 
 // Helper Functions
-
-// resize canvas on windowResized
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
-  background(0);
-}
-
-function detectBeat(level) {
-    if (level  > beatCutoff && level > beatThreshold){
-        onBeat();
-        beatCutoff = level * 1.2;
-        framesSinceLastBeat = 0;
-    } else{
-        if (framesSinceLastBeat <= beatHoldFrames){
-            framesSinceLastBeat ++;
-        }
-        else{
-            beatCutoff *= beatDecayRate;
-            beatCutoff = Math.max(beatCutoff, beatThreshold);
-        }
-    }
-}
-
-// sketch helper functions
-function onBeat() {
-    // solidBackground = color( random(100, 255), random(100, 255), random(100, 255) );
-    // rectRotate = !rectRotate;
+  background('#0F1D3D')
 }
