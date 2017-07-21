@@ -2,8 +2,7 @@ var CLIENT_ID = '69054bf89e340d3b5b2f5678d5b6650b';
 var TRACK_URL = 'https://soundcloud.com/undiscoveredsounds/coldplay-ft-beyonce-hymn-for-the-weekend-ash-remix';
 
 // audio variables
-var source;
-var streamURL;
+var source, streamURL;
 var flag = false;
 
 function preload() {
@@ -34,23 +33,43 @@ function preload() {
 
 // sketch variables
 var canvas;
-var numReflections = 24;
+var nReflections = 14;
+var counter = 0;
 var x = 0;
 var u = 250;
 var y  = 250;
-var s = 16;
 var m = 10;
-var splatter = 0;
 var h = 0;
-var amplitude;
-var beatThreshold;
+var amplitude, beatThreshold;
 
-var brush = {
-  'x': 0,
-  'y': 0,
-  'distanceFromCenter': 0,
+function updateBrush() {
+  var factor = amplitude.getLevel() * (windowWidth);
+  var xOffset = 0;
+  if(factor > 100) {
+    xOffset = random(0, 75);
+      if(factor > 200) {
+        xOffset = random(100, 175);
+        if(factor > 400) {
+          xOffset = random(200, 275);
+          if(factor > 600) {
+            xOffset = random(300, 375);
+          }
+        }
+      }
+  }
+  // console.log(factor);
+  brush.x = factor;
+  brush.y = factor;
+  // brush.x = mouseX;
+  // brush.y = mouseY;
 }
 
+var brush = {
+  x: 0,
+  x: 0,
+  distanceFromCenter: 0,
+  diameter: 20
+}
 
 // anything that should be in setup but should
 // only happen once the song has been loaded
@@ -65,6 +84,13 @@ function trackReady() {
   amplitude.smooth(0.9);
 }
 
+function pressBrush() {
+    noFill();
+    stroke(h, 100, 100);
+    ellipse(0, 0, brush.diameter, brush.diameter);
+    h = (h + 3) % 360;
+}
+
 function setup() {
   // visual set up (not relating to song)
   canvas = createCanvas(windowWidth, windowHeight);
@@ -72,12 +98,91 @@ function setup() {
   background(0);
 }
 
+Number.prototype.roundTo = function(num) {
+    var resto = this%num;
+    if (resto <= (num/2)) {
+        return this-resto;
+    } else {
+        return this+num-resto;
+    }
+}
+
 function draw() {
   // all things drawn based on music
   // flag = true --> song has been successfully loaded
   if(flag) {
+    counter ++;
     var level = amplitude.getLevel();
+
+    updateBrush();
+
+    // Get the angle and distance from draw point to center
+    var x = brush.x - width / 2;
+    var y = brush.y - height / 2;
+    var center = createVector(0, 0);
+    var position = createVector(x, y);
+    var angle = atan2(position.y - center.y, position.x - center.x);
+    var magnitude = center.dist(position);
+    brush.distanceFromCenter = magnitude;
+    brush.diameter = (1000 - brush.distanceFromCenter) / 10;
+
+    // less reflections when closer to diameter
+// 5 to 30
+// 100 to 900
+// divoide by 20
+
+// 24 22 20 18 16 14 12 10 8
+
+console.log(brush.distanceFromCenter);
+    // nReflections = brush.distanceFromCenter/30;
+    var baseAngle = 1 / nReflections * TAU;
+
+
+    push();
+    translate(width / 2, height / 2);
+
+
+    for (var i = 0; i < nReflections; i++) {
+      // Calculate the angle of this angle
+      thisAngle = i * baseAngle;
+      if (i % 2 === 0) {
+        thisAngle += angle;
+      } else {
+        thisAngle += baseAngle - angle;
+      }
+
+      // Creat the draw point
+      var v = p5.Vector.fromAngle(thisAngle);
+      v.mult(magnitude);
+      v.add(center);
+
+      push();
+      translate(v.x, v.y);
+
+      // Rotate
+      if (i % 2 === 0) {
+        rotate(thisAngle);
+      } else {
+        rotate(thisAngle);
+      }
+
+      // Draw
+      pressBrush();
+
+      pop();
+    }
+
+    pop();
   }
+  if(counter % 300 == 0) {
+    background(0);
+  }
+}
+
+// resize canvas on windowResized
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  background(0);
 }
 
 // handle song errors
@@ -87,34 +192,4 @@ function soundError(e) {
   console.log('- message: ' + e.message);
   console.log('- stack: ' + e.stack);
   console.log('- failed path: ' + e.failedPath);
-}
-
-// Helper Functions
-
-// resize canvas on windowResized
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-  background(0);
-}
-
-function detectBeat(level) {
-    if (level  > beatCutoff && level > beatThreshold){
-        onBeat();
-        beatCutoff = level * 1.2;
-        framesSinceLastBeat = 0;
-    } else{
-        if (framesSinceLastBeat <= beatHoldFrames){
-            framesSinceLastBeat ++;
-        }
-        else{
-            beatCutoff *= beatDecayRate;
-            beatCutoff = Math.max(beatCutoff, beatThreshold);
-        }
-    }
-}
-
-// sketch helper functions
-function onBeat() {
-    // solidBackground = color( random(100, 255), random(100, 255), random(100, 255) );
-    // rectRotate = !rectRotate;
 }
