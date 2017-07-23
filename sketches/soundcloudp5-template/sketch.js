@@ -91,8 +91,3 @@ function toggleSong() {
     }
   }
 }
-
-// Bar
-function Bar(x, y, magnitude) {
-
-}
