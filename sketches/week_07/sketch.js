@@ -33,11 +33,11 @@ function preload() {
 
 // sketch variables
 var canvas;
-var nReflections = 14;
+var nReflections = 30;
 var counter = 0;
 var x = 0;
-var u = 250;
-var y  = 250;
+var u = 300;
+var y  = 300;
 var m = 10;
 var h = 0;
 var amplitude, beatThreshold;
@@ -60,15 +60,13 @@ function updateBrush() {
   // console.log(factor);
   brush.x = factor;
   brush.y = factor;
-  // brush.x = mouseX;
-  // brush.y = mouseY;
 }
 
 var brush = {
   x: 0,
   x: 0,
   distanceFromCenter: 0,
-  diameter: 20
+  diameter: 30
 }
 
 // anything that should be in setup but should
@@ -85,8 +83,9 @@ function trackReady() {
 }
 
 function pressBrush() {
-    noFill();
-    stroke(h, 100, 100);
+    // noFill();
+    noStroke();
+    fill(h, 100, 100);
     ellipse(0, 0, brush.diameter, brush.diameter);
     h = (h + 3) % 360;
 }
@@ -126,22 +125,11 @@ function draw() {
     brush.distanceFromCenter = magnitude;
     brush.diameter = (1000 - brush.distanceFromCenter) / 10;
 
-    // less reflections when closer to diameter
-// 5 to 30
-// 100 to 900
-// divoide by 20
-
-// 24 22 20 18 16 14 12 10 8
-
-console.log(brush.distanceFromCenter);
+    console.log(brush.distanceFromCenter);
     // nReflections = brush.distanceFromCenter/30;
     var baseAngle = 1 / nReflections * TAU;
-
-
     push();
     translate(width / 2, height / 2);
-
-
     for (var i = 0; i < nReflections; i++) {
       // Calculate the angle of this angle
       thisAngle = i * baseAngle;
