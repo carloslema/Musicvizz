@@ -8,8 +8,8 @@
 3. Run `python -m SimpleHTTPServer`
 4. Go to `localhost:8000` in your browser
 
-
 ## Credits
+- [three.js](https://p5js.org/)
 - [p5.js](https://p5js.org/)
 - [mo.js](http://mojs.io/)
 - [paper.js](http://paperjs.org/)
