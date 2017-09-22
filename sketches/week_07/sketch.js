@@ -1,20 +1,25 @@
 var visualizer;
+var scene;
+var camera;
+var renderer;
+var controls;
 
 document.onreadystatechange = function () {
   if (document.readyState == "interactive") {
     visualizer = new AudioVisualizer();
     visualizer.setupAudioProcessing();
     visualizer.loadFile("../../audio/magic_coldplay.mp3", init);
+    // visualizer.update();
   }
 }
 
 // Three.js Initialization
 function init() {
-  var scene = new THREE.Scene();
+  scene = new THREE.Scene();
 
   // Setup camera
   var aspectRatio = window.innerWidth / window.innerHeight;
-  var camera = new THREE.PerspectiveCamera(45,
+  camera = new THREE.PerspectiveCamera(45,
     aspectRatio,
     1,
     100
@@ -51,32 +56,37 @@ function init() {
 
   scene.add(particleSystem);
 
-  var renderer = new THREE.WebGLRenderer();
+  renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.shadowMap.enabled = true;
   renderer.setClearColor('#1c3049');
 
-  var controls = new THREE.OrbitControls( camera, renderer.domElement );
+  controls = new THREE.OrbitControls( camera, renderer.domElement );
 
   document.getElementById('webgl').appendChild(renderer.domElement);
 
-  update(renderer, scene, camera, controls);
-}
+  // this.visualizer.update();
+};
 
-function update(renderer, scene, camera, controls) {
-  controls.update();
-  renderer.render(scene, camera);
+// AudioVisualizer.prototype.update = function() {
+//   this.javascriptNode.onaudioprocess = function () {
+//
+//     // Render scene, update controls
+//     this.renderer.render(this.scene, this.camera);
+//     this.controls.update();
+//     console.log("ok");
+//
+//     var frequencyData = this.visualizer.getFrequencyData();
+//     frequencyData.forEach(function(byte) {
+//       console.log(byte);
+//     });
+//
+//     var particleSystem = scene.getObjectByName('particleSystem');
+//     particleSystem.rotation.y += 0.005;
+//
+//   }
+// };
 
-  var frequencyData = this.visualizer.getFrequencyData();
-  // frequencyData.forEach(function(byte) {
-  // 	console.log(byte);
-  // });
-
-
-  var particleSystem = scene.getObjectByName('particleSystem');
-  particleSystem.rotation.y += 0.005;
-
-  requestAnimationFrame(function() {
-    update(renderer, scene, camera, controls);
-  });
-}
+AudioVisualizer.javascriptNode.onaudioprocess = function () {
+console.log("plssss");
+};

@@ -40,6 +40,7 @@ AudioVisualizer.prototype.start = function (buffer, callback) {
         that.sourceBuffer.buffer = decodedBuffer
         that.sourceBuffer.start(0);
 				callback();
+				// this.update();
     }
 
     function decodeAudioDataFailed() {
@@ -60,4 +61,4 @@ AudioVisualizer.prototype.getFrequencyData = function() {
 		// fill the binCount with data returned from getByteFrequencyData from analyser
 		this.analyser.getByteFrequencyData(binCount);
 		return binCount;
-}
+};
