@@ -1,7 +1,5 @@
 var visualizer;
 
-
-
 $(document).ready(function () {
     visualizer = new AudioVisualizer();
     visualizer.initialize();
@@ -10,7 +8,6 @@ $(document).ready(function () {
     // visualizer.getAudio();
     visualizer.handleDrop();
 });
-
 
 function AudioVisualizer() {
     //constants
@@ -130,42 +127,49 @@ AudioVisualizer.prototype.setupAudioProcessing = function () {
     //connect source to analyser
     this.sourceBuffer.connect(this.audioContext.destination);
 
-    var that = this;
+    // var that = this;
 
     //this is where we animates the bars
-    this.javascriptNode.onaudioprocess = function () {
-
-        // get the average for the first channel
-        var array = new Uint8Array(that.analyser.frequencyBinCount);
-        that.analyser.getByteFrequencyData(array);
-
-        //render the scene and update controls
-        visualizer.renderer.render(visualizer.scene, visualizer.camera);
-        visualizer.controls.update();
-
-        var step = Math.round(array.length / visualizer.numberOfBars);
-
-        //Iterate through the bars and scale the z axis
-        for (var i = 0; i < visualizer.numberOfBars; i++) {
-            var value = array[i * step] / 4;
-            value = value < 1 ? 1 : value;
-            visualizer.bars[i].scale.z = value;
-        }
-    }
+    // this.javascriptNode.onaudioprocess = function () {
+    //     // get the average for the first channel
+    //     var array = new Uint8Array(that.analyser.frequencyBinCount);
+    //     that.analyser.getByteFrequencyData(array);
+    //
+    //     //render the scene and update controls
+    //     visualizer.renderer.render(visualizer.scene, visualizer.camera);
+    //     visualizer.controls.update();
+    //
+    //     var step = Math.round(array.length / visualizer.numberOfBars);
+    //
+    //     //Iterate through the bars and scale the z axis
+    //     for (var i = 0; i < visualizer.numberOfBars; i++) {
+    //         var value = array[i * step] / 4;
+    //         value = value < 1 ? 1 : value;
+    //         visualizer.bars[i].scale.z = value;
+    //     }
+    // }
 
 };
 
-//get the default audio from the server
-// AudioVisualizer.prototype.getAudio = function () {
-//     var request = new XMLHttpRequest();
-//     request.open("GET", "Asset/Aathi-StarMusiQ.Com.mp3", true);
-//     request.responseType = "arraybuffer";
-//     request.send();
-//     var that = this;
-//     request.onload = function () {
-//         //that.start(request.response);
-//     }
-// };
+//this is where we animates the bars
+AudioVisualizer.javascriptNode.onaudioprocess = function () {
+    // get the average for the first channel
+    var array = new Uint8Array(that.analyser.frequencyBinCount);
+    that.analyser.getByteFrequencyData(array);
+
+    //render the scene and update controls
+    visualizer.renderer.render(visualizer.scene, visualizer.camera);
+    visualizer.controls.update();
+
+    var step = Math.round(array.length / visualizer.numberOfBars);
+
+    //Iterate through the bars and scale the z axis
+    for (var i = 0; i < visualizer.numberOfBars; i++) {
+        var value = array[i * step] / 4;
+        value = value < 1 ? 1 : value;
+        visualizer.bars[i].scale.z = value;
+    }
+}
 
 //start the audio processing
 AudioVisualizer.prototype.start = function (buffer) {
