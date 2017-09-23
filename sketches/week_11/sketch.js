@@ -28,15 +28,6 @@ function setup() {
 function draw() {
   if (flag)  {
     var spectrum = fft.analyze();
-
-
-
-  //   beginShape();
-  //  for (i = 0; i<spectrum.length; i++) {
-  //   vertex(i, map(spectrum[i], 0, 255, height, 0) );
-  //  }
-  //  endShape();
-  // }
   }
 }
 

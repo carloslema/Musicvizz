@@ -54,7 +54,7 @@ AudioHelper.prototype.loadFile = function (filePath) {
 	var url = filePath;
 	return fetch(url)
 	.then(response => response.arrayBuffer())
-	.then(buffer => visualizer.start(buffer));
+	.then(buffer => this.start(buffer));
 };
 
 AudioHelper.prototype.getFrequencyData = function() {

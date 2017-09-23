@@ -1,92 +1,84 @@
-var visualizer;
-var scene;
-var camera;
-var renderer;
-var controls;
+var audioClient;
+var scene, camera, renderer, clock;
 
 document.onreadystatechange = function () {
   if (document.readyState == "interactive") {
-    visualizer = new AudioVisualizer();
-    visualizer.setupAudioProcessing();
-    visualizer.loadFile("../../audio/magic_coldplay.mp3", init);
-    // visualizer.update();
+		audioClient = new AudioHelper();
+		audioClient.setupAudioProcessing();
+		audioClient.loadFile("../../audio/ben_howard_small_things.mp3")
+		.then(init)
+    .then(()=>{
+      audioClient.onAudioProcess(function () {
+        renderer.render(scene, camera);
+
+				var elapsedTime = clock.getElapsedTime();
+				// console.log("elapsed time: " + elapsedTime);
+				var plane = scene.getObjectByName('plane-1');
+				var planeGeo = plane.geometry;
+
+				var frequencyData = audioClient.getFrequencyData();
+				var freqAvg = audioClient.getAverage(frequencyData);
+				planeGeo.vertices.forEach(function(vertex, index) {
+					// every vertex samples diff math sin curve with index
+					vertex.z += Math.sin(elapsedTime + index * 0.1) * (freqAvg * 0.0005);
+
+				});
+				planeGeo.verticesNeedUpdate = true;
+      });
+    });
   }
+};
+
+function init() {
+	this.scene = new THREE.Scene();
+	this.clock = new THREE.Clock();
+
+	// initialize objects
+	var planeMaterial = getMaterial('rgb(175, 175, 175)');
+	var plane = getPlane(planeMaterial, 50, 60);
+
+	plane.name = 'plane-1';
+
+	// manipulate objects
+	plane.rotation.x = Math.PI/1.7;
+	plane.rotation.z = Math.PI/4;
+
+	// add objects to the scene
+	scene.add(plane);
+
+	this.camera = new THREE.PerspectiveCamera(
+		45, // field of view
+		window.innerWidth / window.innerHeight, // aspect ratio
+		1, // near clipping plane
+		1000 // far clipping plane
+	);
+	camera.position.z = 35;
+	camera.position.x = 0;
+	camera.position.y = 5;
+	camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+	this.renderer = new THREE.WebGLRenderer();
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	renderer.shadowMap.enabled = true;
+	document.getElementById('webgl').appendChild(renderer.domElement);
+};
+
+function getPlane(material, size, segments) {
+	var geometry = new THREE.PlaneGeometry(size, size, segments, segments);
+	material.side = THREE.DoubleSide;
+	var obj = new THREE.Mesh(geometry, material);
+	obj.receiveShadow = true;
+	obj.castShadow = true;
+
+	return obj;
 }
 
-// Three.js Initialization
-function init() {
-  scene = new THREE.Scene();
-
-  // Setup camera
-  var aspectRatio = window.innerWidth / window.innerHeight;
-  camera = new THREE.PerspectiveCamera(45,
-    aspectRatio,
-    1,
-    100
-  );
-
-  // Camera's initial position
-  camera.position.z = 30;
-  camera.position.x = 0;
-  camera.position.y = 20;
-  camera.lookAt(new THREE.Vector3(0, 0, 0));
-
-  // Setup particle geometry
-  var particleGeo = new THREE.SphereGeometry(10, 64, 64);
-  particleGeo.vertices.forEach(function(vertex) {
-    vertex.x += (Math.random() - 0.5);
-    vertex.y += (Math.random() - 0.5);
-    vertex.z += (Math.random() - 0.5);
-  });
-
-  var particleMat = new THREE.PointsMaterial({
-    color: '#9aa6bc',
-    size: 0.25,
-    map: new THREE.TextureLoader().load('particle.jpg'),
-    transparent: true,
-    blending: THREE.AdditiveBlending,
-    depthWrite: false
-  });
-
-  var particleSystem = new THREE.Points(
-    particleGeo,
-    particleMat
-  );
-  particleSystem.name = 'particleSystem';
-
-  scene.add(particleSystem);
-
-  renderer = new THREE.WebGLRenderer();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.shadowMap.enabled = true;
-  renderer.setClearColor('#1c3049');
-
-  controls = new THREE.OrbitControls( camera, renderer.domElement );
-
-  document.getElementById('webgl').appendChild(renderer.domElement);
-
-  // this.visualizer.update();
-};
-
-// AudioVisualizer.prototype.update = function() {
-//   this.javascriptNode.onaudioprocess = function () {
-//
-//     // Render scene, update controls
-//     this.renderer.render(this.scene, this.camera);
-//     this.controls.update();
-//     console.log("ok");
-//
-//     var frequencyData = this.visualizer.getFrequencyData();
-//     frequencyData.forEach(function(byte) {
-//       console.log(byte);
-//     });
-//
-//     var particleSystem = scene.getObjectByName('particleSystem');
-//     particleSystem.rotation.y += 0.005;
-//
-//   }
-// };
-
-AudioVisualizer.javascriptNode.onaudioprocess = function () {
-console.log("plssss");
-};
+function getMaterial(color) {
+	var selectedMaterial;
+	var materialOptions = {
+		color: color === undefined ? 'rgb(255, 255, 255)' : color,
+		wireframe: true,
+	};
+	selectedMaterial = new THREE.MeshBasicMaterial(materialOptions);
+	return selectedMaterial;
+}

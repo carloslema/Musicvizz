@@ -1,21 +1,20 @@
-var visualizer;
+var audioClient;
 var scene, camera, renderer;
 var controls;
-var flip = 0;
 document.onreadystatechange = function () {
   if (document.readyState == "interactive") {
-    visualizer = new AudioHelper();
-    visualizer.setupAudioProcessing();
-    visualizer.loadFile("../../audio/magic_coldplay.mp3")
+    audioClient = new AudioHelper();
+    audioClient.setupAudioProcessing();
+    audioClient.loadFile("../../audio/magic_coldplay.mp3")
     .then(init)
     .then(()=>{
-      visualizer.onAudioProcess(function () {
+      audioClient.onAudioProcess(function () {
         renderer.render(scene, camera);
         controls.update();
 
-        var frequencyData = visualizer.getFrequencyData();
+        var frequencyData = audioClient.getFrequencyData();
         var particleSystem = scene.getObjectByName('particleSystem');
-        var freqAvg = visualizer.getAverage(frequencyData);
+        var freqAvg = audioClient.getAverage(frequencyData);
 
         var rotation = ((360 * Math.round(freqAvg)) / 140) * (Math.PI / 180);
         particleSystem.rotation.y += Math.ceil(Math.sin(rotation)) * 0.09;
