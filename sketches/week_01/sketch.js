@@ -1,113 +1,99 @@
-var items = [];
-var speed = 0.15;
-var spring = 0.1;
-var numDots;
-var canvas;
-var position, target, velocity, radius;
-var animate = false, expanded = false;
+var dots = [], post, target, vel, spring, speed;
+var animate = false, open = false, canvas;
 
 function setup() {
   canvas = createCanvas(windowWidth, windowHeight);
-
+  canvas.touchStarted(flip);
   background(0, 206, 209);
   noStroke();
 
-  // position spring in middle
-  translate(width/2, height/2);
+  translate(windowWidth/2, windowHeight/2);
 
-  position = new p5.Vector(0,0);
-  target = new p5.Vector(0,0);
-  velocity = new p5.Vector(0,0);
+  pos = new p5.Vector(0,0),
+  target = new p5.Vector(0,0),
+  vel = new p5.Vector(0,0),
+  spring= 0.70,
+  speed = 0.1;
 
-  numDots = 7;
+  var maxDots = 10;
+  var startHue = 55;
 
-  layItems();
+  for (var i = 0; i < maxDots; i++) {
+    var offsetAngle = (2*PI)/maxDots;
+    var angle = offsetAngle;
+    var radius = 200;
+
+    target = new p5.Vector(radius*sin(angle*i),radius*cos(angle*i));
+
+    var dot = new Dot(pos.x, pos.y, target, startHue+(i*6));
+    dots.push(dot);
+    dot.render();
+  }
+
 }
 
 function draw() {
   if(animate) {
-    fill(0, 206, 209);
-
-    // center spring
-    translate(width/2, height/2);
+    fill(0, 206, 209, 125);
+    translate(windowWidth/2, windowHeight/2);
     rect(-windowWidth/2,-windowHeight/2, windowWidth, windowHeight);
 
-    for(var x = 0; x < items.length; x++) {
-      // console.log("items count " + items.length);
-      var item = items[x];
-      if (expanded) {
+    for(var i =0; i < dots.length; i ++) {
+      var p = dots[i];
+
+      if (open) {
         target.set(0,0);
       } else {
-        target.set(item.target.x, item.target.y);
+        target.set(p.target.x, p.target.y);
       }
 
-      position.set(item.posX, item.posY);
-      velocity.set(item.velocityX, item.velocityY);
-      velocity.mult(spring);
+      pos.set(p.posX, p.posY);
+      vel.set(p.velX, p.velY);
+      vel.mult(spring);
 
-      var difference = p5.Vector.sub(target, position);
-      // console.log("speed " + speed);
-      difference.mult(speed);
-      velocity.add(difference);
-      position.add(velocity);
+      var diff = p5.Vector.sub(target, pos);
+      diff.mult(speed);
+      vel.add(diff);
+      pos.add(vel);
 
-      item.posX = position.x;
-      item.posY = position.y;
-      item.velocityX = velocity.x;
-      item.velocityY = velocity.y;
+      p.posX = pos.x;
+      p.posY = pos.y;
 
-      item.render();
+      p.velX = vel.x;
+      p.velY = vel.y;
+
+      p.render();
     }
   }
 }
-function touchStarted() {
-  if(!animate) {
-    // now animating
+
+function flip() {
+  if (!animate){
     animate = true;
   } else {
-    if(!expanded) {
-      expanded = true;
-    } else if (expanded) {
-      // spring opened
-      expanded = false;
-      layItems();
+    if (!open) {
+      open = true;
+
+    } else if (open) {
+      open = false;
     }
   }
 }
 
-function layItems() {
-  for(var x = 0; x < numDots; x++) {
-    // angle between dots
-    var angle = (2*PI)/numDots;
-    radius = random(100,200);
+function Dot(posx, posy,t,h) {
 
-    target = new p5.Vector(radius*cos(angle*x), radius*sin(angle*x));
-
-    var r = random(0, 100);
-    var rand = random(200, 255);
-    var item = new Item(position.x, position.y, target, rand);
-    items.push(item);
-    item.render();
-  }
-}
-
-// Spring Item
-function Item(positionX, positionY, t, hue) {
-  this.posX = positionX;
-  this.posY = positionY;
+  this.posX = posx;
+  this.posY = posy;
 
   this.target = new p5.Vector(0,0,0);
   this.target.set(t);
-
-  this.velocityX = 0;
-  this.velocityY = 0;
-
-  this.size = random(20,80);
-
-  this.hue = hue;
+  this.velX = 0;
+  this.velY = 0;
+  this.size = 100;
+  this.hue = h;
 
   this.render = function() {
-    fill(130, 130, hue);
-    ellipse(this.posX, this.posY, this.size, this.size)
+    fill(129, 126, 253);
+    ellipse(this.posX, this.posY, this.size,this.size);
   }
 }

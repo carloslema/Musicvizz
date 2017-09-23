@@ -1,6 +1,5 @@
 var audioClient;
 var scene, camera, renderer;
-var controls;
 document.onreadystatechange = function () {
   if (document.readyState == "interactive") {
     audioClient = new AudioHelper();
@@ -10,13 +9,13 @@ document.onreadystatechange = function () {
     .then(()=>{
       audioClient.onAudioProcess(function () {
         renderer.render(scene, camera);
-        controls.update();
 
         var frequencyData = audioClient.getFrequencyData();
         var particleSystem = scene.getObjectByName('particleSystem');
         var freqAvg = audioClient.getAverage(frequencyData);
 
         var rotation = ((360 * Math.round(freqAvg)) / 140) * (Math.PI / 180);
+
         particleSystem.rotation.y += Math.ceil(Math.sin(rotation)) * 0.09;
         particleSystem.rotation.x += Math.ceil(Math.sin(rotation)) * 0.09;
         particleSystem.rotation.z += Math.ceil(Math.sin(rotation)) * 0.09;
@@ -73,8 +72,6 @@ function init() {
   this.renderer.setSize(window.innerWidth, window.innerHeight);
   this.renderer.shadowMap.enabled = true;
   this.renderer.setClearColor('#1c3049');
-
-  controls = new THREE.OrbitControls( camera, renderer.domElement );
 
   document.getElementById('webgl').appendChild(renderer.domElement);
 };
