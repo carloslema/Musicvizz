@@ -1,28 +1,46 @@
-var scene, camera, renderer, controls;
-var width, height;
+var canvas;
+var lightTexture, darkTexture;
+var filterFreq, filterRes;
+var soundCloudClient;
+var source;
+var fft;
+var flag = false;
 
-function init() {
-  scene = new THREE.scene();
+function preload() {
+  var url = 'https://soundcloud.com/mount-dreams/home-ft-anatomy';
+  this.soundCloudClient = new SoundCloudHelper(url);
+  this.soundCloudClient.setupAudio(trackReady);
+  lightTexture = loadImage('light_texture.png');
+  darkTexture = loadImage('dark_texture.png');
+}
 
-  width = window.innerWidth;
-  height = window.innerHeight;
+function trackReady() {
+  flag = true;
+  source.play();
+  fft.setInput(source)
+}
 
-  renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setSize(width, height);
+function setup() {
+  canvas = createCanvas(windowWidth, windowHeight, WEBGL);
+  fft = new p5.FFT();
+}
 
-  document.body.appendChild(renderer.domElement);
+function draw() {
+  if (flag)  {
+    var spectrum = fft.analyze();
 
-  // create and add camera
-  camera = new THREE.PerspectiveCamera(40, WIDTH / HEIGHT, 0.1, 20000);
-  camera.position.set(0, 45, 0);
-  scene.add(camera);
 
-  window.addEventListener('resize', function () {
-    var resizedW = window.innerWidth, resizedH = window.innerHeight;
-    renderer.setSize(resizedW, resizedH);
-    camera.aspect = resizedW / resizedH;
-    camera.updateProjectionMatrix();
 
-});
+  //   beginShape();
+  //  for (i = 0; i<spectrum.length; i++) {
+  //   vertex(i, map(spectrum[i], 0, 255, height, 0) );
+  //  }
+  //  endShape();
+  // }
+  }
+}
 
+// resize canvas on windowResized
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
 }
