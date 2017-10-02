@@ -1,92 +1,84 @@
-var particles;
-var fillColors;
-var song;
-var amplitude;
-var level;
+var audioClient;
+var scene, camera, renderer, clock;
 
-function preload() {
-  song = loadSound('../../audio/bop.mp3');
-}
+document.onreadystatechange = function () {
+  if (document.readyState == "interactive") {
+		audioClient = new AudioHelper();
+		audioClient.setupAudioProcessing();
+		audioClient.loadFile("../../audio/ben_howard_small_things.mp3")
+		.then(init)
+    .then(()=>{
+      audioClient.onAudioProcess(function () {
+        renderer.render(scene, camera);
 
-function setup() {
-  amplitude = new p5.Amplitude();
-  createCanvas(windowWidth, windowHeight);
-  fillColors = [
-    color(206, 157, 202),
-    color(233, 163, 171),
-    color(7, 162, 218)
-  ];
-  particles = [];
-  for (var i = 0; i < 200; i++) {
-    particles.push(new Particle());
+				var elapsedTime = clock.getElapsedTime();
+				// console.log("elapsed time: " + elapsedTime);
+				var plane = scene.getObjectByName('plane-1');
+				var planeGeo = plane.geometry;
+
+				var frequencyData = audioClient.getFrequencyData();
+				var freqAvg = audioClient.getAverage(frequencyData);
+				planeGeo.vertices.forEach(function(vertex, index) {
+					// every vertex samples diff math sin curve with index
+					vertex.z += Math.sin(elapsedTime + index * 0.1) * (freqAvg * 0.0005);
+
+				});
+				planeGeo.verticesNeedUpdate = true;
+      });
+    });
   }
-  song.play();
-  amplitude.setInput(song);
-  amplitude.smooth(.9);
-  // document.getElementById("play7").style.visibility = "hidden";
-  // document.getElementById("inspiration7").style.visibility = "hidden";
+};
+
+function init() {
+	this.scene = new THREE.Scene();
+	this.clock = new THREE.Clock();
+
+	// initialize objects
+	var planeMaterial = getMaterial('rgb(175, 175, 175)');
+	var plane = getPlane(planeMaterial, 50, 60);
+
+	plane.name = 'plane-1';
+
+	// manipulate objects
+	plane.rotation.x = Math.PI/1.7;
+	plane.rotation.z = Math.PI/4;
+
+	// add objects to the scene
+	scene.add(plane);
+
+	this.camera = new THREE.PerspectiveCamera(
+		45, // field of view
+		window.innerWidth / window.innerHeight, // aspect ratio
+		1, // near clipping plane
+		1000 // far clipping plane
+	);
+	camera.position.z = 35;
+	camera.position.x = 0;
+	camera.position.y = 5;
+	camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+	this.renderer = new THREE.WebGLRenderer();
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	renderer.shadowMap.enabled = true;
+	document.getElementById('webgl').appendChild(renderer.domElement);
+};
+
+function getPlane(material, size, segments) {
+	var geometry = new THREE.PlaneGeometry(size, size, segments, segments);
+	material.side = THREE.DoubleSide;
+	var obj = new THREE.Mesh(geometry, material);
+	obj.receiveShadow = true;
+	obj.castShadow = true;
+
+	return obj;
 }
 
-function draw() {
-  level = amplitude.getLevel() * 10;
-  var col;
-  if (level < 3) {
-    col = fillColors[2];
-  } else if (level > 3 && level < 5) {
-    col = fillColors[1];
-  } else {
-    col = fillColors[0];
-  }
-  background(col);
-  for (var i = 0; i < particles.length; i++) {
-    var particle = particles[i];
-    particle.render();
-    particle.update();
-  }
-}
-
-function Particle() {
-  this.loc = createVector(random(width), random(height));
-  var velSize = random(5);
-  var velAng = random(TWO_PI);
-  this.vel = createVector(velSize, velSize);
-  this.vertices = [];
-  this.fillColor = fillColors[int(random(fillColors.length))];
-}
-
-
-Particle.prototype = {
-  render: function() {
-    noStroke();
-    fill(this.fillColor);
-    if (this.vertices.length < 3) {
-      return;
-    }
-    beginShape();
-    for (var i = 0; i < 3; i++) {
-      var v = this.vertices[i];
-      vertex(v.x, v.y);
-    }
-    endShape(CLOSE);
-  },
-
-  update: function() {
-    var mouse = createVector(windowWidth/2, windowHeight/2);
-    var acc = p5.Vector.sub(mouse, this.loc).limit(level*2);
-    acc.mult(randomGaussian(1));
-    acc.rotate(randomGaussian(0, PI / 3));
-    this.vel.add(acc);
-    this.vel.limit(20*level);
-    this.loc.add(this.vel);
-    this.vertices.push(p5.Vector.add(this.loc, this.vel.copy().rotate(random(TWO_PI * 2))));
-    if (this.vertices.length > 3) {
-      this.vertices.shift();
-    }
-  }
-}
-
-// resize canvas on windowResized
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-  background(0);
+function getMaterial(color) {
+	var selectedMaterial;
+	var materialOptions = {
+		color: color === undefined ? 'rgb(255, 255, 255)' : color,
+		wireframe: true,
+	};
+	selectedMaterial = new THREE.MeshBasicMaterial(materialOptions);
+	return selectedMaterial;
 }
