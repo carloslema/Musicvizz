@@ -1,46 +1,63 @@
-var camera, scene, renderer;
-var geometry, material, mesh;
-var meshes = [];
+var song;
+var amplitude;
+var level;
 
-function init() {
-	renderer = new THREE.CanvasRenderer();
-	renderer.setSize( window.innerWidth, window.innerHeight );
-	document.body.appendChild(renderer.domElement);
+var rectRotate = true;
+var level;
 
-	camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000 );
-	camera.position.z = 2000;
+// Beat Variables
+var beatHoldFrames = 30;
+var beatThreshold = 0.14; // amplitude level that will trigger a beat
+var beatCutoff = 0;
+var beatDecayRate = 0.98;
+var framesSinceLastBeat = 0;
 
-	scene = new THREE.Scene();
-	geometry = new THREE.SphereGeometry( 150, 10,10 );
+var solidBackground;
 
-	material = new THREE.MeshBasicMaterial( { color: 0xFF1493, wireframe: true, wireframeLinewidth: 3} );
-	mesh = new THREE.Mesh( geometry, material );
-
-	scene.add(mesh);
+function preload() {
+  song = loadSound('../../audio/astrovan.mp3');
 }
 
-function generateGrid() {
-	var numXAxis = window.innerWidth / geometry.radius;
-	console.log(numXAxis);
-	var numYAxis = window.innerHeight / geometry.radius;
-	console.log(numYAxis);
+function setup() {
+  background('#fadc8d');
+  solidBackground = color('#fadc8d');
+  createCanvas(windowWidth, windowHeight);
+
+  amplitude = new p5.Amplitude();
+  song.play();
+  amplitude.setInput(song);
+  amplitude.smooth(.9);
 }
 
-function animate() {
 
-	requestAnimationFrame( animate );
-	mesh.rotation.x = Date.now() * 0.0002;
-	mesh.rotation.y = Date.now() * 0.001;
-	renderer.render( scene, camera );
-	var numXAxis = window.innerWidth / geometry.radius;
-	console.log(numXAxis);
-	var numYAxis = window.innerHeight / geometry.radius;
-	console.log(numYAxis);
+function draw() {
+    background(solidBackground);
+    level = amplitude.getLevel();
+    detectBeat(level);
 }
 
-function createDoubleGrid() {
-	var numXAxis = window.innerWidth / geometry.radius;
+function detectBeat(level) {
+    if (level  > beatCutoff && level > beatThreshold){
+        onBeat();
+        beatCutoff = level * 1.2;
+        framesSinceLastBeat = 0;
+    } else{
+        if (framesSinceLastBeat <= beatHoldFrames){
+            framesSinceLastBeat ++;
+        }
+        else {
+            beatCutoff *= beatDecayRate;
+            beatCutoff = Math.max(beatCutoff, beatThreshold);
+        }
+    }
 }
 
-init();
-animate();
+function onBeat() {
+  solidBackground = color( random(100, 255), random(100, 255), random(100, 255) );
+}
+
+
+// resize canvas on windowResized
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+}
