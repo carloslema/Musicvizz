@@ -3,7 +3,20 @@ var amplitude;
 var level;
 
 var rectRotate = true;
-var level;
+
+var lightBlue = '#92ccfa';
+var red = '#f08986';
+var purple = '#b688f8';
+var green = '#a1fbb1';
+var orange = '#fadc8d';
+
+var colors = [
+  lightBlue,
+  red,
+  purple,
+  green,
+  orange
+];
 
 // Beat Variables
 var beatHoldFrames = 30;
@@ -12,16 +25,14 @@ var beatCutoff = 0;
 var beatDecayRate = 0.98;
 var framesSinceLastBeat = 0;
 
-var solidBackground;
-
 function preload() {
   song = loadSound('../../audio/astrovan.mp3');
 }
 
 function setup() {
   background('#fadc8d');
-  solidBackground = color('#fadc8d');
   createCanvas(windowWidth, windowHeight);
+  createShape(lightBlue);
 
   amplitude = new p5.Amplitude();
   song.play();
@@ -31,9 +42,8 @@ function setup() {
 
 
 function draw() {
-    background(solidBackground);
     level = amplitude.getLevel();
-    detectBeat(level);
+    // detectBeat(level);
 }
 
 function detectBeat(level) {
@@ -53,8 +63,24 @@ function detectBeat(level) {
 }
 
 function onBeat() {
-  solidBackground = color( random(100, 255), random(100, 255), random(100, 255) );
 }
+
+// custom shapes
+function createShape(col) {
+  beginShape();
+  fill(col);
+  vertex(0, 80); //
+  bezierVertex(430, 360, 200, 170, 130, 310);
+  endShape(CLOSE);
+}
+
+function ss(col) {
+  beginShape();
+    vertex(269, 146);  //
+    bezierVertex(430, 360, 219, 245, 235, 185);
+  endShape(CLOSE);
+}
+
 
 
 // resize canvas on windowResized
