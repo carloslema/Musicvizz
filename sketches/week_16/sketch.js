@@ -1,90 +1,88 @@
-var audioClient;
-var scene, camera, renderer, clock, geometry;
+var song;
+var amplitude;
+var level;
 
-var width = window.innerWidth,
-    height = window.innerHeight;
+var rectRotate = true;
 
-var point = new THREE.Vector2(0.8, 0.5);
+var lightBlue = '#92ccfa';
+var red = '#f08986';
+var purple = '#b688f8';
+var green = '#a1fbb1';
+var orange = '#fadc8d';
 
-document.onreadystatechange = function () {
-  if (document.readyState == "interactive") {
-		audioClient = new AudioHelper();
-		audioClient.setupAudioProcessing();
-		audioClient.loadFile("../../audio/drive.mp3")
-		.then(init)
-    .then(()=>{
-      audioClient.onAudioProcess(function () {
-        var frequencyData = audioClient.getFrequencyData();
-        var freqAvg = audioClient.getAverage(frequencyData);
-        TweenMax.to(point, 0.8, {
-          y: (freqAvg*10 / height),
-          x : (freqAvg*10 / width),
-          ease: Power1.easeOut
-        });
-      });
-    });
-  }
-};
+var colors = [
+  lightBlue,
+  red,
+  purple,
+  green,
+  orange
+];
 
-function init() {
-	this.scene = new THREE.Scene();
-	this.clock = new THREE.Clock();
+// Beat Variables
+var beatHoldFrames = 30;
+var beatThreshold = 0.14; // amplitude level that will trigger a beat
+var beatCutoff = 0;
+var beatDecayRate = 0.98;
+var framesSinceLastBeat = 0;
 
-	this.camera = new THREE.PerspectiveCamera(100, width / height, 0.1, 10000);
-  this.camera.position.set(0, 0, 300);
-
-  var hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x0C056D, 0.6);
-  scene.add(hemisphereLight);
-
-  var light = new THREE.DirectionalLight(0x590D82, 0.5);
-  light.position.set(200, 300, 400);
-  scene.add(light);
-
-  var light2 = light.clone();
-  light2.position.set(-200, 300, 400);
-  scene.add(light2);
-
-  this.geometry = new THREE.IcosahedronGeometry(200, 5);
-  for(var i = 0; i < geometry.vertices.length; i++) {
-      var vector = geometry.vertices[i];
-      vector._o = vector.clone();
-  }
-  var material = new THREE.MeshPhongMaterial({
-      emissive: 0xF6C7F1,
-      emissiveIntensity: 0.4,
-      shininess: 0
-  });
-  var shape = new THREE.Mesh(geometry, material);
-  scene.add(shape);
-
-	this.renderer = new THREE.WebGLRenderer();
-  renderer.setPixelRatio(window.devicePixelRatio > 1 ? 2 : 1);
-  renderer.setSize(width, height);
-  renderer.setClearColor(0xF6C7F1);
-
-	document.getElementById('webgl').appendChild(renderer.domElement);
-
-  requestAnimationFrame(render);
+function preload() {
+  song = loadSound('../../audio/astrovan.mp3');
 }
 
-function updateVertices(time) {
-  // console.log(frequencyAverage);
-    for(var i = 0; i < geometry.vertices.length; i++) {
-        var vector = geometry.vertices[i];
-        vector.copy(vector._o);
-        var perlin = noise.simplex3(
-            (vector.x * 0.006) + (time * 0.0002),
-            (vector.y * 0.006) + (time * 0.0003),
-            (vector.z * 0.006)
-        );
-        var ratio = ((perlin*0.4 * (point.y+0.1)) + 0.8);
-        vector.multiplyScalar(ratio);
+function setup() {
+  background('#fadc8d');
+  createCanvas(windowWidth, windowHeight);
+  createShape(lightBlue);
+
+  amplitude = new p5.Amplitude();
+  song.play();
+  amplitude.setInput(song);
+  amplitude.smooth(.9);
+}
+
+
+function draw() {
+    level = amplitude.getLevel();
+    // detectBeat(level);
+}
+
+function detectBeat(level) {
+    if (level  > beatCutoff && level > beatThreshold){
+        onBeat();
+        beatCutoff = level * 1.2;
+        framesSinceLastBeat = 0;
+    } else{
+        if (framesSinceLastBeat <= beatHoldFrames){
+            framesSinceLastBeat ++;
+        }
+        else {
+            beatCutoff *= beatDecayRate;
+            beatCutoff = Math.max(beatCutoff, beatThreshold);
+        }
     }
-    geometry.verticesNeedUpdate = true;
 }
 
-function render(time) {
-  requestAnimationFrame(render);
-  updateVertices(time);
-  renderer.render(scene, camera);
+function onBeat() {
+}
+
+// custom shapes
+function createShape(col) {
+  beginShape();
+  fill(col);
+  vertex(0, 80); //
+  bezierVertex(430, 360, 200, 170, 130, 310);
+  endShape(CLOSE);
+}
+
+function ss(col) {
+  beginShape();
+    vertex(269, 146); 
+    bezierVertex(430, 360, 219, 245, 235, 185);
+  endShape(CLOSE);
+}
+
+
+// resize canvas on windowResized
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
 }

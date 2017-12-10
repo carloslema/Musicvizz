@@ -1,84 +1,57 @@
-var audioClient;
-var scene, camera, renderer, clock;
+var soundCloudClient;
 
-document.onreadystatechange = function () {
-  if (document.readyState == "interactive") {
-		audioClient = new AudioHelper();
-		audioClient.setupAudioProcessing();
-		audioClient.loadFile("../../audio/ben_howard_small_things.mp3")
-		.then(init)
-    .then(()=>{
-      audioClient.onAudioProcess(function () {
-        renderer.render(scene, camera);
+// sketch variables
+var source;
+var flag = false;
+var amplitude;
 
-				var elapsedTime = clock.getElapsedTime();
-				// console.log("elapsed time: " + elapsedTime);
-				var plane = scene.getObjectByName('plane-1');
-				var planeGeo = plane.geometry;
-
-				var frequencyData = audioClient.getFrequencyData();
-				var freqAvg = audioClient.getAverage(frequencyData);
-				planeGeo.vertices.forEach(function(vertex, index) {
-					// every vertex samples diff math sin curve with index
-					vertex.z += Math.sin(elapsedTime + index * 0.1) * (freqAvg * 0.0005);
-
-				});
-				planeGeo.verticesNeedUpdate = true;
-      });
-    });
-  }
-};
-
-function init() {
-	this.scene = new THREE.Scene();
-	this.clock = new THREE.Clock();
-
-	// initialize objects
-	var planeMaterial = getMaterial('rgb(175, 175, 175)');
-	var plane = getPlane(planeMaterial, 50, 60);
-
-	plane.name = 'plane-1';
-
-	// manipulate objects
-	plane.rotation.x = Math.PI/1.7;
-	plane.rotation.z = Math.PI/4;
-
-	// add objects to the scene
-	scene.add(plane);
-
-	this.camera = new THREE.PerspectiveCamera(
-		45, // field of view
-		window.innerWidth / window.innerHeight, // aspect ratio
-		1, // near clipping plane
-		1000 // far clipping plane
-	);
-	camera.position.z = 35;
-	camera.position.x = 0;
-	camera.position.y = 5;
-	camera.lookAt(new THREE.Vector3(0, 0, 0));
-
-	this.renderer = new THREE.WebGLRenderer();
-	renderer.setSize(window.innerWidth, window.innerHeight);
-	renderer.shadowMap.enabled = true;
-	document.getElementById('webgl').appendChild(renderer.domElement);
-};
-
-function getPlane(material, size, segments) {
-	var geometry = new THREE.PlaneGeometry(size, size, segments, segments);
-	material.side = THREE.DoubleSide;
-	var obj = new THREE.Mesh(geometry, material);
-	obj.receiveShadow = true;
-	obj.castShadow = true;
-
-	return obj;
+function preload() {
+  var url = 'https://soundcloud.com/botanicalesounds/childish-gambino-redbone-slowed-chopped';
+  this.soundCloudClient = new SoundCloudHelper(url);
+  this.soundCloudClient.setupAudio(trackReady);
 }
 
-function getMaterial(color) {
-	var selectedMaterial;
-	var materialOptions = {
-		color: color === undefined ? 'rgb(255, 255, 255)' : color,
-		wireframe: true,
-	};
-	selectedMaterial = new THREE.MeshBasicMaterial(materialOptions);
-	return selectedMaterial;
+function trackReady() {
+  // song has loaded, set flag
+  flag = true;
+  amplitude = new p5.Amplitude();
+  // source can be played, hide advisements/credits
+  source.play();
+  document.getElementById("play").style.visibility = "hidden";
+  document.getElementById("inspiration").style.visibility = "hidden";
+  amplitude.setInput(source);
+  amplitude.smooth(0.9);
+}
+
+function setup() {
+  // visual set up (not relating to song)
+  canvas = createCanvas(windowWidth, windowHeight);
+  background('#0F1D3D')
+  strokeWeight(3);
+  stroke('#42C1F4');
+}
+
+function draw() {
+  // all things drawn based on music
+  // flag = true --> song has been successfully loaded
+  if(flag) {
+  var level = amplitude.getLevel();
+    background('#0F1D3D')
+    translate(width/2, height/2);
+    for (var i = -180; i < 180; i+=3) {
+      var angle = sin(radians(-sin(radians(i*map(level*5500, 0, width, 0, 5)))*i+frameCount*2))*40;
+      // console.log(mouseX);
+      var x = sin(radians(i))*(50-angle/3);
+      var y = cos(radians(i))*(100-angle/3);
+      var x2 = sin(radians(i))*(300-angle);
+      var y2 = cos(radians(i))*(300-angle);
+      line(x, y, x2, y2);
+    }
+  }
+}
+
+// Helper Functions
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  background('#0F1D3D')
 }

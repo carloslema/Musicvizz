@@ -1,89 +1,84 @@
-var song;
-var amplitude;
-var level;
+var audioClient;
+var scene, camera, renderer, clock;
 
-var rectRotate = true;
+document.onreadystatechange = function () {
+  if (document.readyState == "interactive") {
+		audioClient = new AudioHelper();
+		audioClient.setupAudioProcessing();
+		audioClient.loadFile("../../audio/ben_howard_small_things.mp3")
+		.then(init)
+    .then(()=>{
+      audioClient.onAudioProcess(function () {
+        renderer.render(scene, camera);
 
-var lightBlue = '#92ccfa';
-var red = '#f08986';
-var purple = '#b688f8';
-var green = '#a1fbb1';
-var orange = '#fadc8d';
+				var elapsedTime = clock.getElapsedTime();
+				// console.log("elapsed time: " + elapsedTime);
+				var plane = scene.getObjectByName('plane-1');
+				var planeGeo = plane.geometry;
 
-var colors = [
-  lightBlue,
-  red,
-  purple,
-  green,
-  orange
-];
+				var frequencyData = audioClient.getFrequencyData();
+				var freqAvg = audioClient.getAverage(frequencyData);
+				planeGeo.vertices.forEach(function(vertex, index) {
+					// every vertex samples diff math sin curve with index
+					vertex.z += Math.sin(elapsedTime + index * 0.1) * (freqAvg * 0.0005);
 
-// Beat Variables
-var beatHoldFrames = 30;
-var beatThreshold = 0.14; // amplitude level that will trigger a beat
-var beatCutoff = 0;
-var beatDecayRate = 0.98;
-var framesSinceLastBeat = 0;
+				});
+				planeGeo.verticesNeedUpdate = true;
+      });
+    });
+  }
+};
 
-function preload() {
-  song = loadSound('../../audio/astrovan.mp3');
+function init() {
+	this.scene = new THREE.Scene();
+	this.clock = new THREE.Clock();
+
+	// initialize objects
+	var planeMaterial = getMaterial('rgb(175, 175, 175)');
+	var plane = getPlane(planeMaterial, 50, 60);
+
+	plane.name = 'plane-1';
+
+	// manipulate objects
+	plane.rotation.x = Math.PI/1.7;
+	plane.rotation.z = Math.PI/4;
+
+	// add objects to the scene
+	scene.add(plane);
+
+	this.camera = new THREE.PerspectiveCamera(
+		45, // field of view
+		window.innerWidth / window.innerHeight, // aspect ratio
+		1, // near clipping plane
+		1000 // far clipping plane
+	);
+	camera.position.z = 35;
+	camera.position.x = 0;
+	camera.position.y = 5;
+	camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+	this.renderer = new THREE.WebGLRenderer();
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	renderer.shadowMap.enabled = true;
+	document.getElementById('webgl').appendChild(renderer.domElement);
+};
+
+function getPlane(material, size, segments) {
+	var geometry = new THREE.PlaneGeometry(size, size, segments, segments);
+	material.side = THREE.DoubleSide;
+	var obj = new THREE.Mesh(geometry, material);
+	obj.receiveShadow = true;
+	obj.castShadow = true;
+
+	return obj;
 }
 
-function setup() {
-  background('#fadc8d');
-  createCanvas(windowWidth, windowHeight);
-  createShape(lightBlue);
-
-  amplitude = new p5.Amplitude();
-  song.play();
-  amplitude.setInput(song);
-  amplitude.smooth(.9);
-}
-
-
-function draw() {
-    level = amplitude.getLevel();
-    // detectBeat(level);
-}
-
-function detectBeat(level) {
-    if (level  > beatCutoff && level > beatThreshold){
-        onBeat();
-        beatCutoff = level * 1.2;
-        framesSinceLastBeat = 0;
-    } else{
-        if (framesSinceLastBeat <= beatHoldFrames){
-            framesSinceLastBeat ++;
-        }
-        else {
-            beatCutoff *= beatDecayRate;
-            beatCutoff = Math.max(beatCutoff, beatThreshold);
-        }
-    }
-}
-
-function onBeat() {
-}
-
-// custom shapes
-function createShape(col) {
-  beginShape();
-  fill(col);
-  vertex(0, 80); //
-  bezierVertex(430, 360, 200, 170, 130, 310);
-  endShape(CLOSE);
-}
-
-function ss(col) {
-  beginShape();
-    vertex(269, 146);  //
-    bezierVertex(430, 360, 219, 245, 235, 185);
-  endShape(CLOSE);
-}
-
-
-
-// resize canvas on windowResized
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
+function getMaterial(color) {
+	var selectedMaterial;
+	var materialOptions = {
+		color: color === undefined ? 'rgb(255, 255, 255)' : color,
+		wireframe: true,
+	};
+	selectedMaterial = new THREE.MeshBasicMaterial(materialOptions);
+	return selectedMaterial;
 }

@@ -3,61 +3,38 @@
 <head>
   <meta charset="UTF-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Week 5</title>
   <meta name="description" content="Weekly motion graphic experiments"/>
-  <meta name="keywords" content="motion, graphics, suraya, shivji, wklymotion, animation, paper.js"/>
+  <meta name="keywords" content="motion, graphics, suraya, shivji, wklymotion, animation"/>
   <meta name="author" content="Suraya Shivji"/>
   <link rel="shortcut icon" href="../../favicon.png">
   <!-- Stylehseets -->
-  <link href="https://fonts.googleapis.com/css?family=Maven+Pro" rel="stylesheet">
-  <script type="text/javascript" src="../../js/paper-full.min.js"></script>
-  <script type="text/paperscript" canvas="myCanvas" src="sketch.js"></script>
-  <style type="text/css">
-  html,
-  body {
-    margin: 0;
-    overflow: hidden;
-    height: 100%;
-  }
-  canvas[resize] {
-    width: 100%;
-    height: 100%;
-  }
-  .instructions {
-    display: block;
-    width: 100%;
-    text-align:center;
-    position: absolute;
-    margin-top: 3em;
-    font-size: 21px;
-    color: #606060;
-    font-family: 'Maven Pro';
-  }
-  /* Responsive Title Text */
-  @media only screen and (max-width: 520px) {
-    .instructions {
-      display: block;
-      width: 100%;
-      text-align:center;
-      position: absolute;
-      margin-top: 3em;
-      font-size: 40px;
-      color: #606060;
-      font-family: 'Maven Pro';
-    }
-  }
-  </style>
+  <link rel="stylesheet" type="text/css" href="../../css/normalize.css"/>
   <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-    ga('create', 'UA-93516678-1', 'auto');
-    ga('send', 'pageview');
-  </script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-93516678-1', 'auto');
+  ga('send', 'pageview');
+</script>
+<style>
+video {
+    left: 50%;
+    margin: 0 auto;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+* {
+  background-color: black;
+}
+</style>
 </head>
 <body>
-  <div class="instructions">Draw</div>
-  <canvas id="myCanvas" resize></canvas>
+    <video loop autoplay>
+      <source src="../../img/sollewitt.mp4" type="video/mp4">
+    </video>
 </body>
 </html>

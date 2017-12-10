@@ -1,67 +1,77 @@
-var song;
-var amplitude;
-var level;
+var audioClient;
+var scene, camera, renderer;
+document.onreadystatechange = function () {
+  if (document.readyState == "interactive") {
+    audioClient = new AudioHelper();
+    audioClient.setupAudioProcessing();
+    audioClient.loadFile("../../audio/magic_coldplay.mp3")
+    .then(init)
+    .then(()=>{
+      audioClient.onAudioProcess(function () {
+        renderer.render(scene, camera);
 
-function preload() {
-  song = loadSound('../../audio/gone.mp3');
-}
+        var frequencyData = audioClient.getFrequencyData();
+        var particleSystem = scene.getObjectByName('particleSystem');
+        var freqAvg = audioClient.getAverage(frequencyData);
 
-function setup() {
-  background(255);
-  createCanvas(windowWidth, windowHeight);
-  noStroke();
-  amplitude = new p5.Amplitude();
-  song.play();
-  amplitude.setInput(song);
-  amplitude.smooth(.9);
-}
+        var rotation = ((360 * Math.round(freqAvg)) / 140) * (Math.PI / 180);
 
-var t = 0;
-var speed = 0.03;
-var colors = [[170, 193, 199], [142, 192, 193], [135, 202, 216], [150, 201, 192], [140, 160, 152]];
-
-function draw() {
-  level = amplitude.getLevel();
-
-  var color = generateColor(level);
-  fill(color[0], color[1], color[2], 10);
-  rect(0, 0, windowWidth, windowHeight);
-
-  var n = 100;
-  var radius = map(sin(t), -1, 1, 30, windowWidth/5);
-  var angleSteps = TWO_PI / n;
-  var levelFactor = level * 1000;
-  fill(255);
-  for (var i = 0; i < n; i++) {
-    var angle = t + angleSteps * i;
-    var hue = map(sin(angle/2), -1, 1, 0, 125);
-    fill(hue, 210, 210);
-    var x = width / 2 + sin(angle) * radius;
-    var y = height / 2 + cos(angle) * radius;
-    ellipse(x, y, level * 1000, level * 1000);
+        particleSystem.rotation.y += Math.ceil(Math.sin(rotation)) * 0.09;
+        particleSystem.rotation.x += Math.ceil(Math.sin(rotation)) * 0.09;
+        particleSystem.rotation.z += Math.ceil(Math.sin(rotation)) * 0.09;
+      });
+    });
   }
-  t += speed;
 }
 
-// resize canvas on windowResized
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-}
+// Three.js Initialization
+function init() {
+  this.scene = new THREE.Scene();
 
-//todo make this not terrible
-function generateColor(level) {
-  var factor = level * 100;
-  var color;
-  if (factor < 3) {
-    color = colors[0];
-  } else if (factor > 3 && factor <= 8) {
-    color = colors[1];
-  } else if (factor > 8 && factor <= 11) {
-    color = colors[2];
-  } else if (factor > 11 && factor <= 14) {
-    color = colors[3];
-  } else if (factor > 14) {
-    color = colors[4];
-  }
-  return color;
-}
+  // Setup camera
+  var aspectRatio = window.innerWidth / window.innerHeight;
+  this.camera = new THREE.PerspectiveCamera(45,
+    aspectRatio,
+    1,
+    100
+  );
+
+  // Camera's initial position
+  this.camera.position.z = 30;
+  this.camera.position.x = 0;
+  this.camera.position.y = 20;
+  this.camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+  // Setup particle geometry
+  var particleGeo = new THREE.SphereGeometry(10, 48, 48);
+  particleGeo.vertices.forEach(function(vertex) {
+    vertex.x += (Math.random() - 0.5);
+    vertex.y += (Math.random() - 0.5);
+    vertex.z += (Math.random() - 0.5);
+  });
+
+  var particleMat = new THREE.PointsMaterial({
+    color: '#9aa6bc',
+    size: 0.25,
+    map: new THREE.TextureLoader().load('particle.jpg'),
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
+  });
+
+  var particleSystem = new THREE.Points(
+    particleGeo,
+    particleMat
+  );
+
+  particleSystem.name = 'particleSystem';
+
+  scene.add(particleSystem);
+
+  this.renderer = new THREE.WebGLRenderer();
+  this.renderer.setSize(window.innerWidth, window.innerHeight);
+  this.renderer.shadowMap.enabled = true;
+  this.renderer.setClearColor('#1c3049');
+
+  document.getElementById('webgl').appendChild(renderer.domElement);
+};
