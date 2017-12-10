@@ -1,14 +1,16 @@
 var canvas;
-var lightTexture, darkTexture;
 var filterFreq, filterRes;
-var soundCloudClient;
 var source;
 var fft;
 var flag = false;
+var url = 'https://soundcloud.com/mount-dreams/home-ft-anatomy';
+var lightTexture = loadImage('light_texture.png'),
+    darkTexture = loadImage('dark_texture.png');
+var soundCloudClient = new SoundCloudHelper(url);
+var width = canvas.offsetWidth,
+    height = canvas.offsetHeight;
 
 function preload() {
-  var url = 'https://soundcloud.com/mount-dreams/home-ft-anatomy';
-  this.soundCloudClient = new SoundCloudHelper(url);
   this.soundCloudClient.setupAudio(trackReady);
   lightTexture = loadImage('light_texture.png');
   darkTexture = loadImage('dark_texture.png');

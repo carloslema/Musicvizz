@@ -18,7 +18,7 @@ document.onreadystatechange = function () {
         var frequencyData = audioClient.getFrequencyData();
         var freqAvg = audioClient.getAverage(frequencyData);
         lastRange = freqAvg;
-        if()
+  
 
         // loop through each children in grid and animate y position
         // index available in forEach = each box samples diff portion of sin curve
