@@ -8,6 +8,16 @@
 3. Run `python -m SimpleHTTPServer`
 4. Go to `localhost:8000` in your browser
 
+## Demo
+<div>
+<img style="float:left" src="img/demo1.gif?raw=true" title='' alt=''>
+<img style="float:left" src="img/demo2.gif?raw=true" title='' alt=''>
+</div>
+<div>
+<img style="float:left" src="img/demo4.gif?raw=true" title='' alt=''>
+<img style="float:left" src="img/demo3.gif?raw=true" title='' alt=''>
+</div>
+
 ## Credits
 - [three.js](https://p5js.org/)
 - [p5.js](https://p5js.org/)
