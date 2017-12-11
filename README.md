@@ -10,13 +10,14 @@
 
 ## Demo
 <div>
-<img style="float:left" src="img/demo1.gif?raw=true" title='' alt=''>
-<img style="float:left" src="img/demo2.gif?raw=true" title='' alt=''>
+<img style="float:left" src="img/demo1.gif?raw=true">
+<img style="float:left" src="img/demo2.gif?raw=true">
 </div>
 <div>
-<img style="float:left" src="img/demo4.gif?raw=true" title='' alt=''>
-<img style="float:left" src="img/demo3.gif?raw=true" title='' alt=''>
+<img style="float:left" src="img/demo4.gif?raw=true">
+<img style="float:left" src="img/demo3.gif?raw=true">
 </div>
+<div style="text-align:center;">Checkout all the sketches at <b><i><a href ="http://wklymotion.com/">wklymotion.com</a></i></b></div>
 
 ## Credits
 - [three.js](https://p5js.org/)
