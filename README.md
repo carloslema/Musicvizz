@@ -17,10 +17,11 @@
 <img style="float:left" src="img/demo4.gif?raw=true">
 <img style="float:left" src="img/demo3.gif?raw=true">
 </div>
-<div style="text-align:center;">Checkout all the sketches at <b><i><a href ="http://wklymotion.com/">wklymotion.com</a></i></b></div>
+<div style="text-align:center;">Checkout all the sketches at <b><i><a target="_blank" href ="http://wklymotion.com/">wklymotion.com</a></i></b></div>
 
 ## Credits
 - [three.js](https://p5js.org/)
 - [p5.js](https://p5js.org/)
+- [Web Audio API](https://webaudio.github.io/web-audio-api/)
 - [mo.js](http://mojs.io/)
 - [paper.js](http://paperjs.org/)

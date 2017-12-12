@@ -68,7 +68,7 @@ function draw() {
 }
 
 function flip() {
-  if (!animate){
+  if (!animate) {
     animate = true;
   } else {
     if (!open) {
@@ -81,7 +81,6 @@ function flip() {
 }
 
 function Dot(posx, posy,t,h) {
-
   this.posX = posx;
   this.posY = posy;
 

@@ -61,6 +61,7 @@ function init() {
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.shadowMap.enabled = true;
 	document.getElementById('webgl').appendChild(renderer.domElement);
+  document.getElementsByClassName('loader-container')[0].style.visibility = "hidden";
 };
 
 function getPlane(material, size, segments) {

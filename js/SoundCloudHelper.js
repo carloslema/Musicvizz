@@ -14,7 +14,6 @@ SoundCloudHelper.prototype.setupAudio = function(callback) {
   SC.resolve(this.TRACK_URL).then(function(track) {
     streamUrl = track.stream_url + '?client_id=' + CLIENT_ID;
 		source = this.loadSound(streamUrl, callback, soundError);
-
 	}).catch(function(error) {
     // Network request error
     console.log("Error getting track JSON: " + error + '\n');

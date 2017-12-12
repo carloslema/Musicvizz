@@ -12,19 +12,15 @@ function preload() {
 }
 
 function trackReady() {
-  // song has loaded, set flag
+  document.getElementsByClassName("loader-container")[0].style.visibility = "hidden";
   flag = true;
   amplitude = new p5.Amplitude();
-  // source can be played, hide advisements/credits
   source.play();
-  document.getElementById("play").style.visibility = "hidden";
-  document.getElementById("inspiration").style.visibility = "hidden";
   amplitude.setInput(source);
   amplitude.smooth(0.9);
 }
 
 function setup() {
-  // visual set up (not relating to song)
   canvas = createCanvas(windowWidth, windowHeight);
   background('#0F1D3D')
   strokeWeight(3);

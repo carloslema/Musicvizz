@@ -9,13 +9,10 @@ document.onreadystatechange = function () {
     .then(()=>{
       audioClient.onAudioProcess(function () {
         renderer.render(scene, camera);
-
         var frequencyData = audioClient.getFrequencyData();
         var particleSystem = scene.getObjectByName('particleSystem');
         var freqAvg = audioClient.getAverage(frequencyData);
-
         var rotation = ((360 * Math.round(freqAvg)) / 140) * (Math.PI / 180);
-
         particleSystem.rotation.y += Math.ceil(Math.sin(rotation)) * 0.09;
         particleSystem.rotation.x += Math.ceil(Math.sin(rotation)) * 0.09;
         particleSystem.rotation.z += Math.ceil(Math.sin(rotation)) * 0.09;
@@ -51,7 +48,7 @@ function init() {
   });
 
   var particleMat = new THREE.PointsMaterial({
-    color: '#9aa6bc',
+    color: '#9AA6BC',
     size: 0.25,
     map: new THREE.TextureLoader().load('particle.jpg'),
     transparent: true,
@@ -71,7 +68,7 @@ function init() {
   this.renderer = new THREE.WebGLRenderer();
   this.renderer.setSize(window.innerWidth, window.innerHeight);
   this.renderer.shadowMap.enabled = true;
-  this.renderer.setClearColor('#1c3049');
-
+  this.renderer.setClearColor('#1C3049');
   document.getElementById('webgl').appendChild(renderer.domElement);
+  document.getElementsByClassName('loader-container')[0].style.visibility = "hidden";
 };

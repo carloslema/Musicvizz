@@ -23,8 +23,6 @@ function setup() {
   song.play();
   amplitude.setInput(song);
   amplitude.smooth(.9);
-  // document.getElementById("play7").style.visibility = "hidden";
-  // document.getElementById("inspiration7").style.visibility = "hidden";
 }
 
 function draw() {

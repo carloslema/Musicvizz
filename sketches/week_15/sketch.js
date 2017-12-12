@@ -63,6 +63,7 @@ function init() {
   renderer.setClearColor(0xF6C7F1);
 
 	document.getElementById('webgl').appendChild(renderer.domElement);
+  document.getElementsByClassName('loader-container')[0].style.visibility = "hidden";
 
   requestAnimationFrame(render);
 }
