@@ -1,18 +1,18 @@
 var soundCloudClient;
-
-// sketch variables
 var source;
 var flag = false;
 var amplitude;
+var canvas;
 
 function preload() {
   var url = 'https://soundcloud.com/botanicalesounds/childish-gambino-redbone-slowed-chopped';
   this.soundCloudClient = new SoundCloudHelper(url);
   this.soundCloudClient.setupAudio(trackReady);
+
 }
 
 function trackReady() {
-  document.getElementsByClassName("loader-container")[0].style.visibility = "hidden";
+  document.getElementsByClassName("loader-container")[0].style.display = "none";
   flag = true;
   amplitude = new p5.Amplitude();
   source.play();
