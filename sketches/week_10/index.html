@@ -10,16 +10,8 @@
   <meta name="author" content="Suraya Shivji"/>
   <link rel="shortcut icon" href="../../favicon.png">
   <!-- Stylehseets -->
-  <link href="https://fonts.googleapis.com/css?family=Maven+Pro" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="../../css/loader.css"/>
-  <!-- Scripts -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.5/p5.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.5/addons/p5.sound.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.5/addons/p5.dom.js"></script>
-  <!-- Soundcloud -->
-  <script src="../../js/SoundCloudHelper.js"></script>
-  <script src='https://connect.soundcloud.com/sdk/sdk-3.0.0.js'></script>
-  <script language="javascript" type="text/javascript" src="sketch.js"></script>
+  <link rel="stylesheet" type="text/css" href="../../css/controls.css"/>
   <style>
   html, body {
     overflow: hidden;
@@ -39,6 +31,20 @@
       <span class="loader-inner"></span>
     </span>
   </div>
+  <div id="mute" class="control"></div>
+  <div id="unmute" class="control"></div>
+  <div id="song-info" class="control">
+		<a href="https://open.spotify.com/album/0jR6E4KQGrVLbnG6Fw3pe9" target="_blank"><img src="../../img/music.png"></a>
+	</div>
+  <div id="back-home" class="control"><a href="../../index.html"><img src="../../img/back.png"></a></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.5/p5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.5/addons/p5.dom.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.5/addons/p5.sound.js"></script>
+  <script src="../../js/SoundCloudHelper.js"></script>
+  <script src='https://connect.soundcloud.com/sdk/sdk-3.0.0.js'></script>
+  <script src="../../js/bodymovin.js"></script>
+  <script src="../../js/controls.js"></script>
+  <script language="javascript" type="text/javascript" src="sketch.js"></script>
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

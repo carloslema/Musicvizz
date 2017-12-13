@@ -13,6 +13,7 @@ function preload() {
 function setup() {
   canvas = createCanvas(windowWidth, windowHeight, WEBGL);
   amplitude = new p5.Amplitude();
+  showControls();
   song.play();
   amplitude.setInput(song);
   background(5);
@@ -36,4 +37,14 @@ function draw() {
 // resize canvas on windowResized
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
+}
+
+document.getElementById("mute").onclick = function() {
+  toggleMuteControl();
+  audioClient.toggleSound();
+}
+
+document.getElementById("unmute").onclick = function() {
+  toggleUnmuteControl();
+  audioClient.toggleSound();
 }

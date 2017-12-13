@@ -15,6 +15,7 @@ function trackReady() {
   document.getElementsByClassName("loader-container")[0].style.display = "none";
   flag = true;
   amplitude = new p5.Amplitude();
+  showControls();
   source.play();
   amplitude.setInput(source);
   amplitude.smooth(0.9);
@@ -36,7 +37,6 @@ function draw() {
     translate(width/2, height/2);
     for (var i = -180; i < 180; i+=3) {
       var angle = sin(radians(-sin(radians(i*map(level*5500, 0, width, 0, 5)))*i+frameCount*2))*40;
-      // console.log(mouseX);
       var x = sin(radians(i))*(50-angle/3);
       var y = cos(radians(i))*(100-angle/3);
       var x2 = sin(radians(i))*(300-angle);
@@ -50,4 +50,14 @@ function draw() {
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   background('#0F1D3D')
+}
+
+document.getElementById("mute").onclick = function() {
+  toggleMuteControl();
+  audioClient.toggleSound();
+}
+
+document.getElementById("unmute").onclick = function() {
+  toggleUnmuteControl();
+  audioClient.toggleSound();
 }

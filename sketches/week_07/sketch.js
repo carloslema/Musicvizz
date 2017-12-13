@@ -20,6 +20,7 @@ function setup() {
   for (var i = 0; i < 200; i++) {
     particles.push(new Particle());
   }
+  showControls();
   song.play();
   amplitude.setInput(song);
   amplitude.smooth(.9);
@@ -87,4 +88,14 @@ Particle.prototype = {
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   background(0);
+}
+
+document.getElementById("mute").onclick = function() {
+  toggleMuteControl();
+  audioClient.toggleSound();
+}
+
+document.getElementById("unmute").onclick = function() {
+  toggleUnmuteControl();
+  audioClient.toggleSound();
 }

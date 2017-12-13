@@ -62,6 +62,7 @@ function init() {
 	renderer.shadowMap.enabled = true;
 	document.getElementById('webgl').appendChild(renderer.domElement);
   document.getElementsByClassName('loader-container')[0].style.visibility = "hidden";
+  showControls();
 };
 
 function getPlane(material, size, segments) {
@@ -82,4 +83,15 @@ function getMaterial(color) {
 	};
 	selectedMaterial = new THREE.MeshBasicMaterial(materialOptions);
 	return selectedMaterial;
+}
+
+
+document.getElementById("mute").onclick = function() {
+  toggleMuteControl();
+  audioClient.toggleSound();
+}
+
+document.getElementById("unmute").onclick = function() {
+  toggleUnmuteControl();
+  audioClient.toggleSound();
 }

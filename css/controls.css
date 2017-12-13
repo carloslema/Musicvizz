@@ -1,0 +1,51 @@
+.control {
+    cursor: pointer;
+    position: absolute;
+    visibility: hidden;
+}
+#back-home {
+  position: fixed;
+  top: 25px;
+  left: 4vh;
+}
+#song-info {
+    z-index: 999;
+    position: fixed;
+    bottom: 25px;
+    left: 4vh;
+}
+#mute {
+    z-index: 999;
+    top: 25px;
+    right: 44px;
+    width: 50px;
+    height: 50px;
+}
+#unmute {
+    top: 25px;
+    right: 44px;
+    width: 50px;
+    height: 50px;
+    z-index: 99;
+}
+a {
+    white;
+    text-decoration: none;
+}
+a:visited {
+    text-decoration: none;
+    color: white;
+}
+a:hover {
+    text-decoration: underline;
+    color: white;
+}
+a:focus {
+    text-decoration: none;
+    color: white;
+}
+a:hover,
+a:active {
+    text-decoration: underline;
+    color: white
+}

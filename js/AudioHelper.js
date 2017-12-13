@@ -3,11 +3,15 @@ function AudioHelper() {
 	this.audioContext;
 	this.sourceBuffer;
 	this.analyser;
+	this.gainNode;
+	this.isMuted;
 }
 
 AudioHelper.prototype.setupAudioProcessing = function () {
 	// Get audio context
 	this.audioContext = new AudioContext();
+
+	this.isMuted = false;
 
 	// Create JS node
 	this.javascriptNode = this.audioContext.createScriptProcessor(2048, 1, 1);
@@ -21,14 +25,17 @@ AudioHelper.prototype.setupAudioProcessing = function () {
 	this.analyser.smoothingTimeConstant = 0.3;
 	this.analyser.fftSize = 512;
 
-	// Connect source to analyser
+	this.gainNode = this.audioContext.createGain();
+
 	this.sourceBuffer.connect(this.analyser);
-
-	// Analyser to speakers
 	this.analyser.connect(this.javascriptNode);
-
-	// Connect source to analyser
 	this.sourceBuffer.connect(this.audioContext.destination);
+
+	this.sourceBuffer.connect(this.gainNode);
+	this.gainNode.connect(this.audioContext.destination);
+
+	console.log("original gain: " + this.gainNode.gain.value);
+	this.gainNode.gain.value = 0;
 };
 
 // Start audio processing
@@ -71,4 +78,13 @@ AudioHelper.prototype.getAverage = function(data) {
 		sum += item;
 	});
 	return (sum / data.length);
+}
+
+AudioHelper.prototype.toggleSound = function() {
+	if(!this.isMuted) {
+		this.gainNode.gain.value = -5;
+	} else {
+		this.gainNode.gain.value = 1;
+	}
+	this.isMuted = !this.isMuted;
 }

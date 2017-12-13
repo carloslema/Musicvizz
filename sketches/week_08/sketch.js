@@ -71,4 +71,15 @@ function init() {
   this.renderer.setClearColor('#1C3049');
   document.getElementById('webgl').appendChild(renderer.domElement);
   document.getElementsByClassName('loader-container')[0].style.visibility = "hidden";
+  showControls();
 };
+
+document.getElementById("mute").onclick = function() {
+  toggleMuteControl();
+  audioClient.toggleSound();
+}
+
+document.getElementById("unmute").onclick = function() {
+  toggleUnmuteControl();
+  audioClient.toggleSound();
+}

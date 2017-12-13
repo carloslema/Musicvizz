@@ -4,29 +4,14 @@
   <meta charset="UTF-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Week 10</title>
+  <title>Week 09</title>
   <meta name="description" content="Weekly motion graphic experiments"/>
   <meta name="keywords" content="motion, graphics, suraya, shivji, wklymotion, animation"/>
   <meta name="author" content="Suraya Shivji"/>
   <link rel="shortcut icon" href="../../favicon.png">
-  <!-- Stylehseets -->
   <link rel="stylesheet" type="text/css" href="../../css/loader.css"/>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.5/p5.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.5/addons/p5.dom.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.5/addons/p5.sound.js"></script>
-  <!-- Scripts -->
-  <script language="javascript" type="text/javascript" src="sketch.js"></script>
-  <style>
-  * {
-      background-color: #AAC1C7;
-  }
-  body, html {
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-  }
+  <link rel="stylesheet" type="text/css" href="../../css/controls.css"/>
+  <style> body, html { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; background-color: #AAC1C7; }
   </style>
 </head>
 <body>
@@ -35,6 +20,18 @@
       <span class="loader-inner"></span>
     </span>
   </div>
+  <div id="mute" class="control"></div>
+  <div id="unmute" class="control"></div>
+  <div id="song-info" class="control">
+		<a href="https://open.spotify.com/track/1bTznoPGxp3ygLTHReQtIh" target="_blank"><img src="../../img/music.png"></a>
+	</div>
+  <div id="back-home" class="control"><a href="../../index.html"><img src="../../img/back.png"></a></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.5/p5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.5/addons/p5.dom.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.5/addons/p5.sound.js"></script>
+  <script src="../../js/bodymovin.js"></script>
+  <script src="../../js/controls.js"></script>
+  <script language="javascript" type="text/javascript" src="sketch.js"></script>
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

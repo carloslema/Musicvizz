@@ -11,6 +11,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   noStroke();
   amplitude = new p5.Amplitude();
+  showControls();
   song.play();
   amplitude.setInput(song);
   amplitude.smooth(.9);
@@ -64,4 +65,14 @@ function generateColor(level) {
     color = colors[4];
   }
   return color;
+}
+
+document.getElementById("mute").onclick = function() {
+  toggleMuteControl();
+  audioClient.toggleSound();
+}
+
+document.getElementById("unmute").onclick = function() {
+  toggleUnmuteControl();
+  audioClient.toggleSound();
 }
