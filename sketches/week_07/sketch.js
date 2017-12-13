@@ -3,13 +3,13 @@ var fillColors;
 var song;
 var amplitude;
 var level;
+var gain;
 
 function preload() {
   song = loadSound('../../audio/bop.mp3');
 }
 
 function setup() {
-  amplitude = new p5.Amplitude();
   createCanvas(windowWidth, windowHeight);
   fillColors = [
     color(206, 157, 202),
@@ -20,10 +20,24 @@ function setup() {
   for (var i = 0; i < 200; i++) {
     particles.push(new Particle());
   }
-  showControls();
-  song.play();
-  amplitude.setInput(song);
+
+  amplitude = new p5.Amplitude();
+  song.disconnect();
+
+  gain = new p5.Gain();
+  gain.setInput(song);
   amplitude.smooth(.9);
+  gain.connect();
+
+  showControls();
+  amplitude.setInput(song);
+
+  background('#0F1D3D');
+  strokeWeight(3);
+  stroke('#42C1F4');
+
+  gain.amp(1,0.5,0);
+  song.play();
 }
 
 function draw() {
@@ -91,11 +105,11 @@ function windowResized() {
 }
 
 document.getElementById("mute").onclick = function() {
+  gain.amp(0,0.5,0);
   toggleMuteControl();
-  audioClient.toggleSound();
 }
 
 document.getElementById("unmute").onclick = function() {
+  gain.amp(1,0.5,0);
   toggleUnmuteControl();
-  audioClient.toggleSound();
 }

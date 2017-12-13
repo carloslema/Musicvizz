@@ -1,20 +1,30 @@
 var song;
 var amplitude;
 var level;
+var gain;
 
 function preload() {
   song = loadSound('../../audio/gone.mp3');
 }
 
 function setup() {
-  background(255);
   createCanvas(windowWidth, windowHeight);
   noStroke();
   amplitude = new p5.Amplitude();
+  song.disconnect();
+
+  gain = new p5.Gain();
+  gain.setInput(song);
+  gain.connect();
+
   showControls();
-  song.play();
   amplitude.setInput(song);
   amplitude.smooth(.9);
+
+  background(255);
+  gain.amp(1,0.5,0);
+
+  song.play();
 }
 
 var t = 0;
@@ -68,11 +78,12 @@ function generateColor(level) {
 }
 
 document.getElementById("mute").onclick = function() {
+  gain.amp(0,0.5,0);
   toggleMuteControl();
-  audioClient.toggleSound();
+
 }
 
 document.getElementById("unmute").onclick = function() {
+  gain.amp(1,0.5,0);
   toggleUnmuteControl();
-  audioClient.toggleSound();
 }

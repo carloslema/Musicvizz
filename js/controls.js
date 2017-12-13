@@ -23,7 +23,6 @@ function toggleUnmuteControl() {
 function showControls() {
   var controls = document.getElementsByClassName("control");
   [].forEach.call(controls, function (control) {
-    console.log("control: " + control);
     control.style.visibility = "visible";
   });
 }

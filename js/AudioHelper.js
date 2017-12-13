@@ -20,22 +20,23 @@ AudioHelper.prototype.setupAudioProcessing = function () {
 	// Create Source buffer
 	this.sourceBuffer = this.audioContext.createBufferSource();
 
-	// Create analyser node
+	// Create analyzer node
 	this.analyser = this.audioContext.createAnalyser();
 	this.analyser.smoothingTimeConstant = 0.3;
 	this.analyser.fftSize = 512;
 
 	this.gainNode = this.audioContext.createGain();
+	this.gainNode.gain.value = 1;
 
 	this.sourceBuffer.connect(this.analyser);
+
+	// Connect analyzer node
 	this.analyser.connect(this.javascriptNode);
-	this.sourceBuffer.connect(this.audioContext.destination);
+	this.analyser.connect(this.gainNode);
 
-	this.sourceBuffer.connect(this.gainNode);
+	// Connect gain node for volume
 	this.gainNode.connect(this.audioContext.destination);
-
-	console.log("original gain: " + this.gainNode.gain.value);
-	this.gainNode.gain.value = 0;
+	this.gainNode.connect(this.audioContext.destination);
 };
 
 // Start audio processing
@@ -82,7 +83,7 @@ AudioHelper.prototype.getAverage = function(data) {
 
 AudioHelper.prototype.toggleSound = function() {
 	if(!this.isMuted) {
-		this.gainNode.gain.value = -5;
+		this.gainNode.gain.value = 0;
 	} else {
 		this.gainNode.gain.value = 1;
 	}
