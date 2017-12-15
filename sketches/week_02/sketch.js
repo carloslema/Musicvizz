@@ -1,74 +1,89 @@
-const burst1 = new mojs.Burst({
-  radius: { 0 : 360 },
-  count: 20,
-  children: {
-    shape: 'cross',
-    stroke: 'teal',
-    strokeWidth: {6 : 0},
-    angle: {360 : 0},
-    radius: {30 : 5},
-    duration: 3000
+var song;
+var amplitude;
+var level;
+var gain;
+
+function preload() {
+  song = loadSound("../../audio/gone.mp3");
+}
+
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  noStroke();
+  amplitude = new p5.Amplitude();
+  song.disconnect();
+
+  gain = new p5.Gain();
+  gain.setInput(song);
+  gain.connect();
+
+  showControls();
+  amplitude.setInput(song);
+  amplitude.smooth(.9);
+
+  background(255);
+  gain.amp(1,0.5,0);
+
+  song.play();
+}
+
+var t = 0;
+var speed = 0.03;
+var colors = [[170, 193, 199], [142, 192, 193], [135, 202, 216], [150, 201, 192], [140, 160, 152]];
+
+function draw() {
+  level = amplitude.getLevel();
+
+  var color = generateColor(level);
+  fill(color[0], color[1], color[2], 10);
+  rect(0, 0, windowWidth, windowHeight);
+
+  var n = 100;
+  var radius = map(sin(t), -1, 1, 30, windowWidth/5);
+  var angleSteps = TWO_PI / n;
+  var levelFactor = level * 1000;
+  fill(255);
+  for (var i = 0; i < n; i++) {
+    var angle = t + angleSteps * i;
+    var hue = map(sin(angle/2), -1, 1, 0, 125);
+    fill(hue, 210, 210);
+    var x = width / 2 + sin(angle) * radius;
+    var y = height / 2 + cos(angle) * radius;
+    ellipse(x, y, level * 1000, level * 1000);
   }
-});
+  t += speed;
+}
 
-const burst2 = new mojs.Burst({
-  radius: { 0 : 150 },
-  count: 10,
-  children: {
-    shape: 'zigzag',
-    stroke: {'magenta' : 'blue'},
-    fill: 'none',
-    strokeWidth: {6 : 0},
-    angle: {'-360' : 0},
-    radius: {30 : 5},
-    opacity: {0.85 : 0},
-    duration: 3000
+// resize canvas on windowResized
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+}
+
+//todo make this not terrible
+function generateColor(level) {
+  var factor = level * 100;
+  var color;
+  if (factor < 3) {
+    color = colors[0];
+  } else if (factor > 3 && factor <= 8) {
+    color = colors[1];
+  } else if (factor > 8 && factor <= 11) {
+    color = colors[2];
+  } else if (factor > 11 && factor <= 14) {
+    color = colors[3];
+  } else if (factor > 14) {
+    color = colors[4];
   }
-});
+  return color;
+}
 
-const burst3 = new mojs.Burst({
-  radius: { 0 : 300 },
-  count: 14,
-  children: {
-    shape: 'circle',
-    stroke: {'#a9a9a9' : 'black'},
-    strokeWidth: {2 : 0},
-    angle: {'360' : 0},
-    radius: {5 : 0},
-    fill: 'none',
-    duration: 3000
-  }
-});
+document.getElementById("mute").onclick = function() {
+  gain.amp(0,0.5,0);
+  toggleMuteControl();
 
-const burst4 = new mojs.Burst({
-  radius: { 0 : 360 },
-  count: 5,
-  children: {
-    color: 'purple',
-    angle: {'-360' : 0},
-    radius: {10 : 5},
-    opacity: {0.85 : 0},
-    duration: 3000
-  }
-});
+}
 
-const circ = new mojs.Shape({
-  radius: {0 : 200},
-  fill: 'none',
-  stroke: 'yellow',
-  opacity: {1: 0},
-  duration: 2000
-});
-
-const circ2 = new mojs.Shape({
-  radius: {0 : 150},
-  fill: 'none',
-  stroke: 'yellow',
-  opacity: {1: 0},
-  duration: 2000,
-  delay: 100
-});
-
-const timeline = new mojs.Timeline({
-  repeat: 999
-}).add(burst1).add(burst2).add(burst3).add(burst4).add(circ).add(circ2).play();
+document.getElementById("unmute").onclick = function() {
+  gain.amp(1,0.5,0);
+  toggleUnmuteControl();
+}

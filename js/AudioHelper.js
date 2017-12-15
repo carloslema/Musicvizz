@@ -4,6 +4,7 @@ function AudioHelper() {
 	this.sourceBuffer;
 	this.analyser;
 	this.gainNode;
+	this.boost;
 	this.isMuted;
 }
 
@@ -12,6 +13,7 @@ AudioHelper.prototype.setupAudioProcessing = function () {
 	this.audioContext = new AudioContext();
 
 	this.isMuted = false;
+	this.boost = 0;
 
 	// Create JS node
 	this.javascriptNode = this.audioContext.createScriptProcessor(2048, 1, 1);
@@ -70,6 +72,11 @@ AudioHelper.prototype.getFrequencyData = function() {
 	var binCount = new Uint8Array(this.analyser.frequencyBinCount);
 	// fill the binCount with data returned from getByteFrequencyData from analyser
 	this.analyser.getByteFrequencyData(binCount);
+	boost = 0;
+	for (var i = 0; i < binCount.length; i++) {
+		boost += binCount[i];
+	}
+	boost /= binCount.length;
 	return binCount;
 };
 

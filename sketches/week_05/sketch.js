@@ -13,7 +13,7 @@ document.onreadystatechange = function () {
 
 				var elapsedTime = clock.getElapsedTime();
 				// console.log("elapsed time: " + elapsedTime);
-				var plane = scene.getObjectByName('plane-1');
+				var plane = scene.getObjectByName("plane-1");
 				var planeGeo = plane.geometry;
 
 				var frequencyData = audioClient.getFrequencyData();
@@ -34,10 +34,10 @@ function init() {
 	this.clock = new THREE.Clock();
 
 	// initialize objects
-	var planeMaterial = getMaterial('rgb(175, 175, 175)');
+	var planeMaterial = getMaterial("rgb(175, 175, 175)");
 	var plane = getPlane(planeMaterial, 50, 60);
 
-	plane.name = 'plane-1';
+	plane.name = "plane-1";
 
 	// manipulate objects
 	plane.rotation.x = Math.PI/1.7;
@@ -60,8 +60,8 @@ function init() {
 	this.renderer = new THREE.WebGLRenderer();
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.shadowMap.enabled = true;
-	document.getElementById('webgl').appendChild(renderer.domElement);
-  document.getElementsByClassName('loader-container')[0].style.visibility = "hidden";
+	document.getElementById("webgl").appendChild(renderer.domElement);
+  document.getElementsByClassName("loader-container")[0].style.visibility = "hidden";
   showControls();
 };
 
@@ -78,7 +78,7 @@ function getPlane(material, size, segments) {
 function getMaterial(color) {
 	var selectedMaterial;
 	var materialOptions = {
-		color: color === undefined ? 'rgb(255, 255, 255)' : color,
+		color: color === undefined ? "rgb(255, 255, 255)" : color,
 		wireframe: true,
 	};
 	selectedMaterial = new THREE.MeshBasicMaterial(materialOptions);

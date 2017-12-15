@@ -1,89 +1,102 @@
-var song;
-var amplitude;
-var level;
-var gain;
+var audioClient;
+var scene, camera, renderer, clock, geometry;
 
-function preload() {
-  song = loadSound('../../audio/gone.mp3');
-}
+var width = window.innerWidth,
+    height = window.innerHeight;
 
-function setup() {
-  createCanvas(windowWidth, windowHeight);
-  noStroke();
-  amplitude = new p5.Amplitude();
-  song.disconnect();
+var point = new THREE.Vector2(0.8, 0.5);
 
-  gain = new p5.Gain();
-  gain.setInput(song);
-  gain.connect();
+document.onreadystatechange = function () {
+  if (document.readyState == "interactive") {
+		audioClient = new AudioHelper();
+		audioClient.setupAudioProcessing();
+		audioClient.loadFile("../../audio/drive.mp3")
+		.then(init)
+    .then(()=>{
+      audioClient.onAudioProcess(function () {
+        var frequencyData = audioClient.getFrequencyData();
+        var freqAvg = audioClient.getAverage(frequencyData);
+        TweenMax.to(point, 0.8, {
+          y: (freqAvg*10 / height),
+          x : (freqAvg*10 / width),
+          ease: Power1.easeOut
+        });
+      });
+    });
+  }
+};
 
+function init() {
+	this.scene = new THREE.Scene();
+	this.clock = new THREE.Clock();
+
+	this.camera = new THREE.PerspectiveCamera(100, width / height, 0.1, 10000);
+  this.camera.position.set(0, 0, 300);
+
+  var hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x0C056D, 0.6);
+  scene.add(hemisphereLight);
+
+  var light = new THREE.DirectionalLight(0x590D82, 0.5);
+  light.position.set(200, 300, 400);
+  scene.add(light);
+
+  var light2 = light.clone();
+  light2.position.set(-200, 300, 400);
+  scene.add(light2);
+
+  this.geometry = new THREE.IcosahedronGeometry(200, 5);
+  for(var i = 0; i < geometry.vertices.length; i++) {
+      var vector = geometry.vertices[i];
+      vector._o = vector.clone();
+  }
+  var material = new THREE.MeshPhongMaterial({
+      emissive: 0xF6C7F1,
+      emissiveIntensity: 0.4,
+      shininess: 0
+  });
+  var shape = new THREE.Mesh(geometry, material);
+  scene.add(shape);
+
+	this.renderer = new THREE.WebGLRenderer();
+  renderer.setPixelRatio(window.devicePixelRatio > 1 ? 2 : 1);
+  renderer.setSize(width, height);
+  renderer.setClearColor(0xF6C7F1);
+
+	document.getElementById("webgl").appendChild(renderer.domElement);
+  // Hide loader
+  document.getElementsByClassName("loader-container")[0].style.visibility = "hidden";
   showControls();
-  amplitude.setInput(song);
-  amplitude.smooth(.9);
 
-  background(255);
-  gain.amp(1,0.5,0);
-
-  song.play();
+  requestAnimationFrame(render);
 }
 
-var t = 0;
-var speed = 0.03;
-var colors = [[170, 193, 199], [142, 192, 193], [135, 202, 216], [150, 201, 192], [140, 160, 152]];
-
-function draw() {
-  level = amplitude.getLevel();
-
-  var color = generateColor(level);
-  fill(color[0], color[1], color[2], 10);
-  rect(0, 0, windowWidth, windowHeight);
-
-  var n = 100;
-  var radius = map(sin(t), -1, 1, 30, windowWidth/5);
-  var angleSteps = TWO_PI / n;
-  var levelFactor = level * 1000;
-  fill(255);
-  for (var i = 0; i < n; i++) {
-    var angle = t + angleSteps * i;
-    var hue = map(sin(angle/2), -1, 1, 0, 125);
-    fill(hue, 210, 210);
-    var x = width / 2 + sin(angle) * radius;
-    var y = height / 2 + cos(angle) * radius;
-    ellipse(x, y, level * 1000, level * 1000);
-  }
-  t += speed;
+function updateVertices(time) {
+    for(var i = 0; i < geometry.vertices.length; i++) {
+        var vector = geometry.vertices[i];
+        vector.copy(vector._o);
+        var perlin = noise.simplex3(
+            (vector.x * 0.006) + (time * 0.0002),
+            (vector.y * 0.006) + (time * 0.0003),
+            (vector.z * 0.006)
+        );
+        var ratio = ((perlin*0.4 * (point.y+0.1)) + 0.8);
+        vector.multiplyScalar(ratio);
+    }
+    geometry.verticesNeedUpdate = true;
 }
 
-// resize canvas on windowResized
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-}
-
-//todo make this not terrible
-function generateColor(level) {
-  var factor = level * 100;
-  var color;
-  if (factor < 3) {
-    color = colors[0];
-  } else if (factor > 3 && factor <= 8) {
-    color = colors[1];
-  } else if (factor > 8 && factor <= 11) {
-    color = colors[2];
-  } else if (factor > 11 && factor <= 14) {
-    color = colors[3];
-  } else if (factor > 14) {
-    color = colors[4];
-  }
-  return color;
+function render(time) {
+  requestAnimationFrame(render);
+  updateVertices(time);
+  renderer.render(scene, camera);
 }
 
 document.getElementById("mute").onclick = function() {
-  gain.amp(0,0.5,0);
   toggleMuteControl();
-
+  audioClient.toggleSound();
 }
 
 document.getElementById("unmute").onclick = function() {
-  gain.amp(1,0.5,0);
   toggleUnmuteControl();
+  audioClient.toggleSound();
 }

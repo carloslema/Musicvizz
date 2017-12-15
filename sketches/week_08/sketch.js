@@ -1,85 +1,63 @@
-var audioClient;
-var scene, camera, renderer;
-document.onreadystatechange = function () {
-  if (document.readyState == "interactive") {
-    audioClient = new AudioHelper();
-    audioClient.setupAudioProcessing();
-    audioClient.loadFile("../../audio/magic_coldplay.mp3")
-    .then(init)
-    .then(()=>{
-      audioClient.onAudioProcess(function () {
-        renderer.render(scene, camera);
-        var frequencyData = audioClient.getFrequencyData();
-        var particleSystem = scene.getObjectByName('particleSystem');
-        var freqAvg = audioClient.getAverage(frequencyData);
-        var rotation = ((360 * Math.round(freqAvg)) / 140) * (Math.PI / 180);
-        particleSystem.rotation.y += Math.ceil(Math.sin(rotation)) * 0.09;
-        particleSystem.rotation.x += Math.ceil(Math.sin(rotation)) * 0.09;
-        particleSystem.rotation.z += Math.ceil(Math.sin(rotation)) * 0.09;
-      });
-    });
+var canvas;
+var angle = 0;
+var angleSpeed = 0.01;
+var song;
+var amplitude;
+var torusGroup = [];
+var flag = true;
+var gain;
+
+function preload() {
+  song = loadSound("../../audio/dancing_in_dark.mp3");
+}
+
+function setup() {
+  canvas = createCanvas(windowWidth, windowHeight, WEBGL);
+  amplitude = new p5.Amplitude();
+
+  song.disconnect();
+
+  gain = new p5.Gain();
+  gain.setInput(song);
+  gain.connect();
+
+  showControls();
+  amplitude.setInput(song);
+
+  background(5);
+
+  gain.amp(1,0.5,0);
+  song.play();
+
+}
+
+function draw() {
+  if (song.isPlaying()) {
+    camera(0, 0, sin(frameCount * 0.01) * (windowHeight/2));
+    background(0);
+    var level = amplitude.getLevel() * 10;
+
+    for(var x = 0; x < 7; x++) {
+      rotateX(frameCount * 0.01);
+      rotateZ(frameCount * 0.01);
+      translate(Math.floor(x * level * 2), Math.floor(x * level * 2), -level);
+      torus(150, 25, 50, 50);
+    }
   }
 }
 
-// Three.js Initialization
-function init() {
-  this.scene = new THREE.Scene();
-
-  // Setup camera
-  var aspectRatio = window.innerWidth / window.innerHeight;
-  this.camera = new THREE.PerspectiveCamera(45,
-    aspectRatio,
-    1,
-    100
-  );
-
-  // Camera's initial position
-  this.camera.position.z = 30;
-  this.camera.position.x = 0;
-  this.camera.position.y = 20;
-  this.camera.lookAt(new THREE.Vector3(0, 0, 0));
-
-  // Setup particle geometry
-  var particleGeo = new THREE.SphereGeometry(10, 48, 48);
-  particleGeo.vertices.forEach(function(vertex) {
-    vertex.x += (Math.random() - 0.5);
-    vertex.y += (Math.random() - 0.5);
-    vertex.z += (Math.random() - 0.5);
-  });
-
-  var particleMat = new THREE.PointsMaterial({
-    color: '#9AA6BC',
-    size: 0.25,
-    map: new THREE.TextureLoader().load('particle.jpg'),
-    transparent: true,
-    blending: THREE.AdditiveBlending,
-    depthWrite: false
-  });
-
-  var particleSystem = new THREE.Points(
-    particleGeo,
-    particleMat
-  );
-
-  particleSystem.name = 'particleSystem';
-
-  scene.add(particleSystem);
-
-  this.renderer = new THREE.WebGLRenderer();
-  this.renderer.setSize(window.innerWidth, window.innerHeight);
-  this.renderer.shadowMap.enabled = true;
-  this.renderer.setClearColor('#1C3049');
-  document.getElementById('webgl').appendChild(renderer.domElement);
-  document.getElementsByClassName('loader-container')[0].style.visibility = "hidden";
-  showControls();
-};
+// resize canvas on windowResized
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+}
 
 document.getElementById("mute").onclick = function() {
+  gain.amp(0,0.5,0);
   toggleMuteControl();
-  audioClient.toggleSound();
+
 }
 
 document.getElementById("unmute").onclick = function() {
+  gain.amp(1,0.5,0);
   toggleUnmuteControl();
-  audioClient.toggleSound();
 }

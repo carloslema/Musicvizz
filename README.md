@@ -23,5 +23,3 @@
 - [three.js](https://p5js.org/)
 - [p5.js](https://p5js.org/)
 - [Web Audio API](https://webaudio.github.io/web-audio-api/)
-- [mo.js](http://mojs.io/)
-- [paper.js](http://paperjs.org/)

@@ -1,98 +1,115 @@
-var dots = [], post, target, vel, spring, speed;
-var animate = false, open = false, canvas;
+var particles;
+var fillColors;
+var song;
+var amplitude;
+var level;
+var gain;
+
+function preload() {
+  song = loadSound("../../audio/bop.mp3");
+}
 
 function setup() {
-  canvas = createCanvas(windowWidth, windowHeight);
-  canvas.touchStarted(flip);
-  background(0, 206, 209);
-  noStroke();
-
-  translate(windowWidth/2, windowHeight/2);
-
-  pos = new p5.Vector(0,0),
-  target = new p5.Vector(0,0),
-  vel = new p5.Vector(0,0),
-  spring= 0.70,
-  speed = 0.1;
-
-  var maxDots = 10;
-  var startHue = 55;
-
-  for (var i = 0; i < maxDots; i++) {
-    var offsetAngle = (2*PI)/maxDots;
-    var angle = offsetAngle;
-    var radius = 200;
-
-    target = new p5.Vector(radius*sin(angle*i),radius*cos(angle*i));
-
-    var dot = new Dot(pos.x, pos.y, target, startHue+(i*6));
-    dots.push(dot);
-    dot.render();
+  createCanvas(windowWidth, windowHeight);
+  fillColors = [
+    color(206, 157, 202),
+    color(233, 163, 171),
+    color(7, 162, 218)
+  ];
+  particles = [];
+  for (var i = 0; i < 200; i++) {
+    particles.push(new Particle());
   }
 
+  amplitude = new p5.Amplitude();
+  song.disconnect();
+
+  gain = new p5.Gain();
+  gain.setInput(song);
+  amplitude.smooth(.9);
+  gain.connect();
+
+  showControls();
+  amplitude.setInput(song);
+
+  background("#0F1D3D");
+  strokeWeight(3);
+  stroke("#42C1F4");
+
+  gain.amp(1,0.5,0);
+  song.play();
 }
 
 function draw() {
-  if(animate) {
-    fill(0, 206, 209, 125);
-    translate(windowWidth/2, windowHeight/2);
-    rect(-windowWidth/2,-windowHeight/2, windowWidth, windowHeight);
-
-    for(var i =0; i < dots.length; i ++) {
-      var p = dots[i];
-
-      if (open) {
-        target.set(0,0);
-      } else {
-        target.set(p.target.x, p.target.y);
-      }
-
-      pos.set(p.posX, p.posY);
-      vel.set(p.velX, p.velY);
-      vel.mult(spring);
-
-      var diff = p5.Vector.sub(target, pos);
-      diff.mult(speed);
-      vel.add(diff);
-      pos.add(vel);
-
-      p.posX = pos.x;
-      p.posY = pos.y;
-
-      p.velX = vel.x;
-      p.velY = vel.y;
-
-      p.render();
-    }
-  }
-}
-
-function flip() {
-  if (!animate) {
-    animate = true;
+  level = amplitude.getLevel() * 10;
+  var col;
+  if (level < 3) {
+    col = fillColors[2];
+  } else if (level > 3 && level < 5) {
+    col = fillColors[1];
   } else {
-    if (!open) {
-      open = true;
+    col = fillColors[0];
+  }
+  background(col);
+  for (var i = 0; i < particles.length; i++) {
+    var particle = particles[i];
+    particle.render();
+    particle.update();
+  }
+}
 
-    } else if (open) {
-      open = false;
+function Particle() {
+  this.loc = createVector(random(width), random(height));
+  var velSize = random(5);
+  var velAng = random(TWO_PI);
+  this.vel = createVector(velSize, velSize);
+  this.vertices = [];
+  this.fillColor = fillColors[int(random(fillColors.length))];
+}
+
+
+Particle.prototype = {
+  render: function() {
+    noStroke();
+    fill(this.fillColor);
+    if (this.vertices.length < 3) {
+      return;
+    }
+    beginShape();
+    for (var i = 0; i < 3; i++) {
+      var v = this.vertices[i];
+      vertex(v.x, v.y);
+    }
+    endShape(CLOSE);
+  },
+
+  update: function() {
+    var mouse = createVector(windowWidth/2, windowHeight/2);
+    var acc = p5.Vector.sub(mouse, this.loc).limit(level*2);
+    acc.mult(randomGaussian(1));
+    acc.rotate(randomGaussian(0, PI / 3));
+    this.vel.add(acc);
+    this.vel.limit(20*level);
+    this.loc.add(this.vel);
+    this.vertices.push(p5.Vector.add(this.loc, this.vel.copy().rotate(random(TWO_PI * 2))));
+    if (this.vertices.length > 3) {
+      this.vertices.shift();
     }
   }
 }
 
-function Dot(posx, posy,t,h) {
-  this.posX = posx;
-  this.posY = posy;
+// resize canvas on windowResized
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  background(0);
+}
 
-  this.target = new p5.Vector(0,0,0);
-  this.target.set(t);
-  this.velX = 0;
-  this.velY = 0;
-  this.size = 100;
-  this.hue = h;
+document.getElementById("mute").onclick = function() {
+  gain.amp(0,0.5,0);
+  toggleMuteControl();
+}
 
-  this.render = function() {
-    fill(129, 126, 253);
-    ellipse(this.posX, this.posY, this.size,this.size);
-  }
+document.getElementById("unmute").onclick = function() {
+  gain.amp(1,0.5,0);
+  toggleUnmuteControl();
 }
