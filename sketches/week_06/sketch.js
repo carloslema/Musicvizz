@@ -1,88 +1,120 @@
-var song;
-var amplitude;
-var level;
+var camera, scene, renderer;
+var mesh;
+var materialShader;
 
-var rectRotate = true;
+document.onreadystatechange = function () {
+	if (document.readyState == "interactive") {
+		audioClient = new AudioHelper();
+		audioClient.setupAudioProcessing();
+		audioClient.loadFile("../../audio/onemore.mp3")
+			.then(init)
+			.then(animate)
+			.then(() => {
+				audioClient.onAudioProcess(function () {
+					var frequencyData = audioClient.getFrequencyData();
+					var freqAvg = audioClient.getAverage(frequencyData);
+					var floatFreq = audioClient.getFrequencyDataFloat();
 
-var lightBlue = '#92ccfa';
-var red = '#f08986';
-var purple = '#b688f8';
-var green = '#a1fbb1';
-var orange = '#fadc8d';
+					if (materialShader) {
+						var test = (performance.now() / 500);
+						materialShader.uniforms.audioFreq.value = test;
+						mesh.rotation.y += freqAvg / 10000;
+					}
+					renderer.render(scene, camera);
 
-var colors = [
-  lightBlue,
-  red,
-  purple,
-  green,
-  orange
-];
-
-// Beat Variables
-var beatHoldFrames = 30;
-var beatThreshold = 0.14; // amplitude level that will trigger a beat
-var beatCutoff = 0;
-var beatDecayRate = 0.98;
-var framesSinceLastBeat = 0;
-
-function preload() {
-  song = loadSound('../../audio/astrovan.mp3');
-}
-
-function setup() {
-  background('#fadc8d');
-  createCanvas(windowWidth, windowHeight);
-  createShape(lightBlue);
-
-  amplitude = new p5.Amplitude();
-  song.play();
-  amplitude.setInput(song);
-  amplitude.smooth(.9);
+				});
+			});
+	}
 }
 
 
-function draw() {
-    level = amplitude.getLevel();
-    // detectBeat(level);
+function init() {
+	camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
+	camera.position.z = 2000;
+	camera.position.y = 2500;
+	scene = new THREE.Scene();
+	var material = new THREE.MeshNormalMaterial();
+	// var gui = new dat.GUI();
+	// gui.addFolder('Camera Position');
+	// gui.add(camera.position, 'x', -2000, 2000);
+	// gui.add(camera.position, 'y', -2000, 2000);
+	// gui.add(camera.position, 'z', -2000, 2000);
+	// gui.addFolder('Camera Rotation');
+	// gui.add(camera.rotation, 'x', - Math.PI, Math.PI);
+	// gui.add(camera.rotation, 'y', - Math.PI, Math.PI);
+	// gui.add(camera.rotation, 'z', - Math.PI, Math.PI);
+	material.onBeforeCompile = function (shader) {
+		shader.uniforms.audioFreq = { value: 0 };
+		shader.uniforms.factor = { value: 0 };
+		shader.vertexShader = 'uniform float audioFreq;\n' + 'uniform float factor;\n' + shader.vertexShader;
+		shader.vertexShader = shader.vertexShader.replace(
+			'#include <begin_vertex>',
+			[
+				'float theta = sin( audioFreq + position.y ) / 9.0;',
+				'float c = cos( theta );',
+				'float s = sin( theta );',
+				'mat3 m = mat3( c, 0, s, 0, 1, 0, -s, 0, c );',
+				// 'mat3 m = mat3(0, 1, 0, -s, 0, c, c, 0, s);',
+				'vec3 transformed = vec3( position ) * m;',
+				'vNormal = vNormal * m;'
+			].join('\n')
+		);
+		materialShader = shader;
+	};
+	var loader = new THREE.GLTFLoader();
+	loader.load('head.glb', function (gltf) {
+		mesh = new THREE.Mesh(gltf.scene.children[0].geometry, material);
+		mesh.position.y = -1100;
+		mesh.rotation.x = -0.75;
+		mesh.position.z = 1600;
+		mesh.rotation.x = -0.80;
+		// gui.addFolder('Mesh Position');
+		// gui.add(mesh.position, 'x', -4000, 5000).step(1);
+		// gui.add(mesh.position, 'y', -4000, 5000).step(1);
+		// gui.add(mesh.position, 'z', -4000, 5000).step(1);
+		// gui.addFolder('Mesh Rotation');
+		// gui.add(mesh.rotation, 'x', - Math.PI, Math.PI);
+		// gui.add(mesh.rotation, 'y', - Math.PI, Math.PI);
+		// gui.add(mesh.rotation, 'z', - Math.PI, Math.PI);
+		// gui.addFolder('Mesh Scale');
+		// gui.add(mesh.scale, 'x', - Math.PI * 100, Math.PI * 100);
+		// gui.add(mesh.scale, 'y', - Math.PI * 100, Math.PI * 100);
+		// gui.add(mesh.scale, 'z', - Math.PI * 100, Math.PI * 100);
+		mesh.scale.setScalar(100);
+		scene.add(mesh);
+	});
+
+	renderer = new THREE.WebGLRenderer({ antialias: true });
+	renderer.setPixelRatio(window.devicePixelRatio);
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	
+	document.getElementById("webgl").appendChild(renderer.domElement);
+	document.getElementsByClassName("loader-container")[0].style.visibility = "hidden";
+	showControls();
+	var controls = new THREE.OrbitControls(camera, renderer.domElement);
+	// EVENTS
+	window.addEventListener('resize', onWindowResize, false);
 }
 
-function detectBeat(level) {
-    if (level  > beatCutoff && level > beatThreshold){
-        onBeat();
-        beatCutoff = level * 1.2;
-        framesSinceLastBeat = 0;
-    } else{
-        if (framesSinceLastBeat <= beatHoldFrames){
-            framesSinceLastBeat ++;
-        }
-        else {
-            beatCutoff *= beatDecayRate;
-            beatCutoff = Math.max(beatCutoff, beatThreshold);
-        }
-    }
+function onWindowResize() {
+	var width = window.innerWidth;
+	var height = window.innerHeight;
+	camera.aspect = width / height;
+	camera.updateProjectionMatrix();
+	renderer.setSize(width, height);
 }
 
-function onBeat() {
+function animate() {
+	requestAnimationFrame(animate);
 }
 
-// custom shapes
-function createShape(col) {
-  beginShape();
-  fill(col);
-  vertex(0, 80); //
-  bezierVertex(430, 360, 200, 170, 130, 310);
-  endShape(CLOSE);
-}
-
-function ss(col) {
-  beginShape();
-    vertex(269, 146);
-    bezierVertex(430, 360, 219, 245, 235, 185);
-  endShape(CLOSE);
-}
-
-
-// resize canvas on windowResized
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-}
+document.getElementById("mute").onclick = function() {
+	toggleMuteControl();
+	audioClient.toggleSound();
+  }
+  
+  document.getElementById("unmute").onclick = function() {
+	toggleUnmuteControl();
+	audioClient.toggleSound();
+  }
+  

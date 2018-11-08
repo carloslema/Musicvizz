@@ -79,6 +79,16 @@ AudioHelper.prototype.getFrequencyData = function() {
 	boost /= binCount.length;
 	return binCount;
 };
+AudioHelper.prototype.getFrequencyDataFloat = function() {
+	var binn = new Float32Array(this.analyser.frequencyBinCount);
+	this.analyser.getFloatFrequencyData(binn);
+	// boost = 0;
+	// for (var i = 0; i < binCount.length; i++) {
+	// 	boost += binCount[i];
+	// }
+	// boost /= binCount.length;
+	return binn;
+}
 
 AudioHelper.prototype.getAverage = function(data) {
 	var sum = 0;

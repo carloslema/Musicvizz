@@ -5,19 +5,19 @@ document.onreadystatechange = function () {
     audioClient = new AudioHelper();
     audioClient.setupAudioProcessing();
     audioClient.loadFile("../../audio/magic_coldplay.mp3")
-    .then(init)
-    .then(()=>{
-      audioClient.onAudioProcess(function () {
-        renderer.render(scene, camera);
-        var frequencyData = audioClient.getFrequencyData();
-        var particleSystem = scene.getObjectByName("particleSystem");
-        var freqAvg = audioClient.getAverage(frequencyData);
-        var rotation = ((360 * Math.round(freqAvg)) / 140) * (Math.PI / 180);
-        particleSystem.rotation.y += Math.ceil(Math.sin(rotation)) * 0.09;
-        particleSystem.rotation.x += Math.ceil(Math.sin(rotation)) * 0.09;
-        particleSystem.rotation.z += Math.ceil(Math.sin(rotation)) * 0.09;
+      .then(init)
+      .then(() => {
+        audioClient.onAudioProcess(function () {
+          renderer.render(scene, camera);
+          var frequencyData = audioClient.getFrequencyData();
+          var particleSystem = scene.getObjectByName("particleSystem");
+          var freqAvg = audioClient.getAverage(frequencyData);
+          var rotation = ((360 * Math.round(freqAvg)) / 140) * (Math.PI / 180);
+          particleSystem.rotation.y += Math.ceil(Math.sin(rotation)) * 0.09;
+          particleSystem.rotation.x += Math.ceil(Math.sin(rotation)) * 0.09;
+          particleSystem.rotation.z += Math.ceil(Math.sin(rotation)) * 0.09;
+        });
       });
-    });
   }
 }
 
@@ -41,7 +41,7 @@ function init() {
 
   // Setup particle geometry
   var particleGeo = new THREE.SphereGeometry(10, 48, 48);
-  particleGeo.vertices.forEach(function(vertex) {
+  particleGeo.vertices.forEach(function (vertex) {
     vertex.x += (Math.random() - 0.5);
     vertex.y += (Math.random() - 0.5);
     vertex.z += (Math.random() - 0.5);
@@ -74,12 +74,12 @@ function init() {
   showControls();
 };
 
-document.getElementById("mute").onclick = function() {
+document.getElementById("mute").onclick = function () {
   toggleMuteControl();
   audioClient.toggleSound();
 }
 
-document.getElementById("unmute").onclick = function() {
+document.getElementById("unmute").onclick = function () {
   toggleUnmuteControl();
   audioClient.toggleSound();
 }
