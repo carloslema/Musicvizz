@@ -41,6 +41,7 @@ function init() {
 
   // Setup particle geometry
   var particleGeo = new THREE.SphereGeometry(10, 48, 48);
+  
   particleGeo.vertices.forEach(function (vertex) {
     vertex.x += (Math.random() - 0.5);
     vertex.y += (Math.random() - 0.5);
