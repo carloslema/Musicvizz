@@ -5,7 +5,7 @@ document.onreadystatechange = function () {
   if (document.readyState == "interactive") {
 		audioClient = new AudioHelper();
 		audioClient.setupAudioProcessing();
-		audioClient.loadFile("../../audio/uandi.mp3")
+		audioClient.loadFile("../../audio/smallthings.mp3")
 		.then(init)
     .then(()=>{
       audioClient.onAudioProcess(function () {
