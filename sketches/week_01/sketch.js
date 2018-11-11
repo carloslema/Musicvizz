@@ -6,7 +6,7 @@ var level;
 var gain;
 
 function preload() {
-  song = loadSound("../../audio/uandi.mp3");
+  song = loadSound("../../audio/bop.mp3");
 }
 
 function setup() {
