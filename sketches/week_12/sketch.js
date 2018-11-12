@@ -21,7 +21,7 @@ function animateStart() {
 function beginAudioProcessing() {
     audioClient = new AudioHelper();
     audioClient.setupAudioProcessing();
-    audioClient.loadFile("../../audio/dunno.mp3")
+    audioClient.loadFile("../../audio/lovely.mp3")
         .then(init)
         .then(animate)
         .then(() => {

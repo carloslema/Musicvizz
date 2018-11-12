@@ -16,7 +16,7 @@ function animateStart() {
 function beginAudioProcessing() {
   audioClient = new AudioHelper();
   audioClient.setupAudioProcessing();
-  audioClient.loadFile("../../audio/onemore.mp3")
+  audioClient.loadFile("../../audio/magic.mp3")
     .then(init)
     .then(() => {
       audioClient.onAudioProcess(function () {
