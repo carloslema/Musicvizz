@@ -5,58 +5,67 @@ var previousFreq = 0;
 var floatFreq = [];
 var rebound = true;
 
-document.onreadystatechange = function () {
-    if (document.readyState == "interactive") {
-        audioClient = new AudioHelper();
-        audioClient.setupAudioProcessing();
-        audioClient.loadFile("../../audio/lovely.mp3")
-            .then(init)
-            .then(animate)
-            .then(() => {
-                audioClient.onAudioProcess(function () {
-
-                    var frequencyData = audioClient.getFrequencyData();
-                    var freqAvg = audioClient.getAverage(frequencyData);
-                    floatFreq = audioClient.getFrequencyDataFloat();
-
-                    var time = Date.now() * 0.005;
-
-                    var sizes = geometry.attributes.size.array;
-                    for (var i = 0; i < particles; i++) {
-                        sizes[i] = 10 * (1 + Math.sin(0.1 * i + time));
-                        // console.log(floatFreq[i]);
-                    }
-
-                    //upper : 230
-                    // lower : -115
-
-                    if (camera.position.z < -115) {
-                        rebound = !rebound;
-                    }
-
-                    if (camera.position.z > 245) {
-                        rebound = !rebound;
-                    }
-
-                    if (rebound) {
-                        camera.position.z -= (freqAvg * 0.01);
-                        particleSystem.rotation.z += (0.0001 * freqAvg);
-                        // camera.position.x -= (freqAvg*0.001);
-                        // camera.position.y -= (freqAvg*0.001);
-                    } else {
-                        camera.position.z += (freqAvg * 0.01);
-                        particleSystem.rotation.z -= (0.0001 * freqAvg);
-                        // camera.position.x += (freqAvg*0.001);
-                        // camera.position.y += (freqAvg*0.001);
-                    }
-
-                    geometry.attributes.size.needsUpdate = true;
-                    renderer.render(scene, camera);
-
-                });
-            });
-    }
+function startClicked() {
+    // hide button and show loader
+    // TODO: animate button into loader animateStart()
+    document.getElementsByClassName("button-container")[0].style.visibility = "hidden";
+    document.getElementsByClassName("loader-container")[0].style.visibility = "visible";
+    beginAudioProcessing();
 }
+
+function animateStart() {
+    // document.getElementById("start-animate").classList.add('button-animated');
+}
+
+
+function beginAudioProcessing() {
+    audioClient = new AudioHelper();
+    audioClient.setupAudioProcessing();
+    audioClient.loadFile("../../audio/dunno.mp3")
+        .then(init)
+        .then(animate)
+        .then(() => {
+            audioClient.onAudioProcess(function () {
+                var frequencyData = audioClient.getFrequencyData();
+                var freqAvg = audioClient.getAverage(frequencyData);
+                floatFreq = audioClient.getFrequencyDataFloat();
+
+                var time = Date.now() * 0.005;
+
+                var sizes = geometry.attributes.size.array;
+                for (var i = 0; i < particles; i++) {
+                    sizes[i] = 10 * (1 + Math.sin(0.1 * i + time));
+                    // console.log(floatFreq[i]);
+                }
+
+                //upper : 230
+                // lower : -115
+
+                if (camera.position.z < -115) {
+                    rebound = !rebound;
+                }
+
+                if (camera.position.z > 245) {
+                    rebound = !rebound;
+                }
+
+                if (rebound) {
+                    camera.position.z -= (freqAvg * 0.01);
+                    particleSystem.rotation.z += (0.0001 * freqAvg);
+                    // camera.position.x -= (freqAvg*0.001);
+                    // camera.position.y -= (freqAvg*0.001);
+                } else {
+                    camera.position.z += (freqAvg * 0.01);
+                    particleSystem.rotation.z -= (0.0001 * freqAvg);
+                    // camera.position.x += (freqAvg*0.001);
+                    // camera.position.y += (freqAvg*0.001);
+                }
+                geometry.attributes.size.needsUpdate = true;
+                renderer.render(scene, camera);
+            });
+        });
+}
+
 function init() {
     // var gui = new dat.GUI();
 
@@ -107,9 +116,13 @@ function init() {
     container.appendChild(renderer.domElement);
 
     window.addEventListener('resize', onWindowResize, false);
-    document.getElementsByClassName("loader-container")[0].style.visibility = "hidden";
-    showControls();
+
+	// show visualization and hide loader
+	document.getElementById("webgl").appendChild(renderer.domElement);
+	showControls();
+	document.getElementsByClassName("loader-container")[0].style.visibility = "hidden";
 }
+
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();

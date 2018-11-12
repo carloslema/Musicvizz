@@ -5,12 +5,13 @@
 body {
     margin: 0;
     background: black;
-    -webkit-font-smooth
-    ing: antialiased;
+    -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     -ms-text-size-adjust: 100%;
-    -webkit-text-size-adjust: 100%}
+    -webkit-text-size-adjust: 100%
+}
+
 .title-text {
     line-height: 1.5;
     color: #D3D3D3;

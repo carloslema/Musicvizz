@@ -6,51 +6,60 @@ var mouseX = 0, mouseY = 0;
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
 
-document.onreadystatechange = function () {
-	if (document.readyState == "interactive") {
-		audioClient = new AudioHelper();
-		audioClient.setupAudioProcessing();
-		audioClient.loadFile("../../audio/dunno.mp3")
-			.then(init)
-			.then(animate)
-			.then(() => {
-				audioClient.onAudioProcess(function () {
-
-					var time = Date.now() * 0.005;
-
-					var frequencyData = audioClient.getFrequencyData();
-					var freqAvg = audioClient.getAverage(frequencyData);
-					var floatFreq = audioClient.getFrequencyDataFloat();
-
-
-					camera.lookAt(scene.position);
-					var positions = particles.geometry.attributes.position.array;
-					var scales = particles.geometry.attributes.scale.array;
-					var i = 0, j = 0;
-
-					for (var ix = 0; ix < AMOUNTX; ix++) {
-						for (var iy = 0; iy < AMOUNTY; iy++) {
-							positions[i + 1] = (Math.sin((ix + count) * 0.3) * 50) +
-								(Math.sin((iy + count) * 0.5) * 50);
-								
-							scales[j] = (Math.sin((ix + count) * 0.3) + 1) * 8 +
-								(Math.sin((iy + count) * 0.5) + 1) * 8;
-							i += 3;
-							j++;
-						}
-					}
-
-					particles.geometry.attributes.position.needsUpdate = true;
-					particles.geometry.attributes.scale.needsUpdate = true;
-					renderer.render(scene, camera);
-
-					count += (freqAvg*0.005);
-
-				});
-			});
-	}
+function startClicked() {
+	// hide button and show loader
+	// TODO: animate button into loader animateStart()
+	document.getElementsByClassName("button-container")[0].style.visibility = "hidden";
+	document.getElementsByClassName("loader-container")[0].style.visibility = "visible";
+	beginAudioProcessing();
 }
 
+function animateStart() {
+	// document.getElementById("start-animate").classList.add('button-animated');
+}
+
+function beginAudioProcessing() {
+	audioClient = new AudioHelper();
+	audioClient.setupAudioProcessing();
+	audioClient.loadFile("../../audio/dunno.mp3")
+		.then(init)
+		.then(animate)
+		.then(() => {
+			audioClient.onAudioProcess(function () {
+
+				var time = Date.now() * 0.005;
+
+				var frequencyData = audioClient.getFrequencyData();
+				var freqAvg = audioClient.getAverage(frequencyData);
+				var floatFreq = audioClient.getFrequencyDataFloat();
+
+
+				camera.lookAt(scene.position);
+				var positions = particles.geometry.attributes.position.array;
+				var scales = particles.geometry.attributes.scale.array;
+				var i = 0, j = 0;
+
+				for (var ix = 0; ix < AMOUNTX; ix++) {
+					for (var iy = 0; iy < AMOUNTY; iy++) {
+						positions[i + 1] = (Math.sin((ix + count) * 0.3) * 50) +
+							(Math.sin((iy + count) * 0.5) * 50);
+
+						scales[j] = (Math.sin((ix + count) * 0.3) + 1) * 8 +
+							(Math.sin((iy + count) * 0.5) + 1) * 8;
+						i += 3;
+						j++;
+					}
+				}
+
+				particles.geometry.attributes.position.needsUpdate = true;
+				particles.geometry.attributes.scale.needsUpdate = true;
+				renderer.render(scene, camera);
+
+				count += (freqAvg * 0.005);
+
+			});
+		});
+}
 
 function init() {
 	camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
@@ -68,7 +77,7 @@ function init() {
 
 	var positions = new Float32Array(numParticles * 3);
 	var scales = new Float32Array(numParticles);
-	
+
 	var i = 0, j = 0;
 	for (var ix = 0; ix < AMOUNTX; ix++) {
 		for (var iy = 0; iy < AMOUNTY; iy++) {
@@ -103,21 +112,22 @@ function init() {
 	// document.addEventListener('touchmove', onDocumentTouchMove, false);
 	// window.addEventListener('resize', onWindowResize, false);
 
+	// show visualization and hide loader
 	document.getElementById("webgl").appendChild(renderer.domElement);
-	document.getElementsByClassName("loader-container")[0].style.visibility = "hidden";
 	showControls();
+	document.getElementsByClassName("loader-container")[0].style.visibility = "hidden";
 }
 
-document.getElementById("mute").onclick = function() {
+document.getElementById("mute").onclick = function () {
 	toggleMuteControl();
 	audioClient.toggleSound();
-  }
-  
-  document.getElementById("unmute").onclick = function() {
+}
+
+document.getElementById("unmute").onclick = function () {
 	toggleUnmuteControl();
 	audioClient.toggleSound();
-  }
-  
+}
+
 
 // function onDocumentMouseMove(event) {
 // 	mouseX = event.clientX - windowHalfX;

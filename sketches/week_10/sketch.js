@@ -2,7 +2,7 @@ var camera, tick = 0,
 	scene, renderer, clock = new THREE.Clock(),
 	controls, container,
 	options, spawnerOptions, particleSystem;
-	// var gui = new dat.GUI({ width: 350 });
+// var gui = new dat.GUI({ width: 350 });
 var max = 0;
 
 var startTime, currentTime;
@@ -11,86 +11,93 @@ function initializsetime() {
 	startTime = new Date();
 }
 
-document.onreadystatechange = function () {
-	if (document.readyState == "interactive") {
-		audioClient = new AudioHelper();
-		audioClient.setupAudioProcessing();
-		audioClient.loadFile("../../audio/thanku.mp3")
-			.then(init)
-			.then(animate)
-			.then(initializsetime)
-			.then(() => {
-				audioClient.onAudioProcess(function () {
-					currentTime = new Date();
-					var seconds = (currentTime - startTime) / 1000;
-					controls.update();
-
-					var frequencyData = audioClient.getFrequencyData();
-					var freqAvg = audioClient.getAverage(frequencyData);
-					var floatFreq = audioClient.getFrequencyDataFloat();
-					if (freqAvg > max) {
-						max = freqAvg;
-					}
-					var delta = freqAvg / 2000;
-					tick += delta;
-					if (tick < 0) tick = 0;
-
-					if (delta > 0) {
-
-						// console.log(max);
-						// lifetime = 1 to 10
-						// freq approx 0 to 125
-						options.lifetime = freqAvg / 13;
-
-						// size = 5 to 10
-						// freq approx 0 to 125
-						// options.lifetime = ;
-						options.size = freqAvg / 8;
-
-						if (seconds >= 9 && seconds <= 12) {
-							// sean
-							options.color = new THREE.Color( 0x05EDFF );
-							
-						}
-						if (seconds > 13 && seconds <= 16) {
-							// ricky
-							options.color = new THREE.Color( 0x1464F4 );
-						}
-						if (seconds > 17 && seconds <= 20) {
-							// pete
-							options.color = new THREE.Color( 0x6666FF );
-						}
-						if (seconds > 21 && seconds <= 25) {
-							// malcolm
-							options.color = new THREE.Color( 0xFFFFFF );
-						}
-						if (seconds > 25) {
-							// regular
-							options.color = new THREE.Color( 0xAE7FAB );
-						}
-						console.log(options.color);
-
-
-						// options.position.x = Math.sin(tick * spawnerOptions.horizontalSpeed) * 5 + (freqAvg/20);
-						// options.position.y = Math.sin(tick * spawnerOptions.verticalSpeed) * 2 * (freqAvg/20);
-
-						options.position.x = Math.sin(tick * spawnerOptions.horizontalSpeed) * 20;
-						options.position.y = Math.sin(tick * spawnerOptions.verticalSpeed) * 10;
-						// console.log(freqAvg);
-						options.position.z = Math.sin(tick * spawnerOptions.horizontalSpeed + spawnerOptions.verticalSpeed) * 5 + (freqAvg / 20);
-						for (var x = 0; x < spawnerOptions.spawnRate * delta; x++) {
-							// Spawning particles is super cheap, and once you spawn them, the rest of
-							// their lifecycle is handled entirely on the GPU, driven by a time uniform updated below
-							particleSystem.spawnParticle(options);
-						}
-					}
-					particleSystem.update(tick);
-					render();
-				});
-			});
-	}
+function startClicked() {
+	// hide button and show loader
+	// TODO: animate button into loader animateStart()
+	document.getElementsByClassName("button-container")[0].style.visibility = "hidden";
+	document.getElementsByClassName("loader-container")[0].style.visibility = "visible";
+	beginAudioProcessing();
 }
 
+function animateStart() {
+	// document.getElementById("start-animate").classList.add('button-animated');
+}
+
+function beginAudioProcessing() {
+	audioClient = new AudioHelper();
+	audioClient.setupAudioProcessing();
+	audioClient.loadFile("../../audio/onemore.mp3")
+		.then(init)
+		.then(() => {
+			audioClient.onAudioProcess(function () {
+				currentTime = new Date();
+				var seconds = (currentTime - startTime) / 1000;
+				controls.update();
+
+				var frequencyData = audioClient.getFrequencyData();
+				var freqAvg = audioClient.getAverage(frequencyData);
+				var floatFreq = audioClient.getFrequencyDataFloat();
+				if (freqAvg > max) {
+					max = freqAvg;
+				}
+				var delta = freqAvg / 2000;
+				tick += delta;
+				if (tick < 0) tick = 0;
+
+				if (delta > 0) {
+
+					// console.log(max);
+					// lifetime = 1 to 10
+					// freq approx 0 to 125
+					options.lifetime = freqAvg / 13;
+
+					// size = 5 to 10
+					// freq approx 0 to 125
+					// options.lifetime = ;
+					options.size = freqAvg / 8;
+
+					if (seconds >= 9 && seconds <= 12) {
+						// sean
+						options.color = new THREE.Color(0x05EDFF);
+
+					}
+					if (seconds > 13 && seconds <= 16) {
+						// ricky
+						options.color = new THREE.Color(0x1464F4);
+					}
+					if (seconds > 17 && seconds <= 20) {
+						// pete
+						options.color = new THREE.Color(0x6666FF);
+					}
+					if (seconds > 21 && seconds <= 25) {
+						// malcolm
+						options.color = new THREE.Color(0xFFFFFF);
+					}
+					if (seconds > 25) {
+						// regular
+						options.color = new THREE.Color(0xAE7FAB);
+					}
+					console.log(options.color);
+
+
+					// options.position.x = Math.sin(tick * spawnerOptions.horizontalSpeed) * 5 + (freqAvg/20);
+					// options.position.y = Math.sin(tick * spawnerOptions.verticalSpeed) * 2 * (freqAvg/20);
+
+					options.position.x = Math.sin(tick * spawnerOptions.horizontalSpeed) * 20;
+					options.position.y = Math.sin(tick * spawnerOptions.verticalSpeed) * 10;
+					// console.log(freqAvg);
+					options.position.z = Math.sin(tick * spawnerOptions.horizontalSpeed + spawnerOptions.verticalSpeed) * 5 + (freqAvg / 20);
+					for (var x = 0; x < spawnerOptions.spawnRate * delta; x++) {
+						// Spawning particles is super cheap, and once you spawn them, the rest of
+						// their lifecycle is handled entirely on the GPU, driven by a time uniform updated below
+						particleSystem.spawnParticle(options);
+					}
+				}
+				particleSystem.update(tick);
+				render();
+			});
+		});
+}
 
 function init() {
 	container = document.getElementById('webgl');
@@ -151,9 +158,11 @@ function init() {
 	controls.dynamicDampingFactor = 0.3;
 
 	window.addEventListener('resize', onWindowResize, false);
+
+	// show visualization and hide loader
 	document.getElementById("webgl").appendChild(renderer.domElement);
-	document.getElementsByClassName("loader-container")[0].style.visibility = "hidden";
 	showControls();
+	document.getElementsByClassName("loader-container")[0].style.visibility = "hidden";
 }
 function onWindowResize() {
 	camera.aspect = window.innerWidth / window.innerHeight;
@@ -166,13 +175,12 @@ function animate() {
 function render() {
 	renderer.render(scene, camera);
 }
-document.getElementById("mute").onclick = function() {
+document.getElementById("mute").onclick = function () {
 	toggleMuteControl();
 	audioClient.toggleSound();
-  }
-  
-  document.getElementById("unmute").onclick = function() {
+}
+
+document.getElementById("unmute").onclick = function () {
 	toggleUnmuteControl();
 	audioClient.toggleSound();
-  }
-  
+}

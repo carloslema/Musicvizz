@@ -6,16 +6,29 @@ var pinkDirectionalLight, blueDirectionalLight, ambientLight;
 var count = 0;
 var switchDirection, rotationZ = true;
 var frameCount = 0;
-document.onreadystatechange = function () {
-  if (document.readyState == "interactive") {
-    audioClient = new AudioHelper();
-    audioClient.setupAudioProcessing();
-    audioClient.loadFile("../../audio/miley_we_cant_stop.mp3")
+
+function startClicked() {
+  // hide button and show loader
+  // TODO: animate button into loader animateStart()
+  document.getElementsByClassName("button-container")[0].style.visibility = "hidden";
+  document.getElementsByClassName("loader-container")[0].style.visibility = "visible";
+  beginAudioProcessing();
+}
+
+function animateStart() {
+  // document.getElementById("start-animate").classList.add('button-animated');
+}
+
+function beginAudioProcessing() {
+  audioClient = new AudioHelper();
+  audioClient.setupAudioProcessing();
+  audioClient.loadFile("../../audio/miley_we_cant_stop.mp3")
     .then(init)
-    .then(()=>{
+    .then(() => {
       audioClient.onAudioProcess(function () {
+
         renderer.render(scene, camera);
-        frameCount ++;
+        frameCount++;
         var boxGrid = scene.getObjectByName("boxGrid");
         var timeElapsed = clock.getElapsedTime();
         var frequencyData = audioClient.getFrequencyData();
@@ -24,10 +37,10 @@ document.onreadystatechange = function () {
         var lowerBound = 2;
         var upperBound = 100;
         var increment = 1;
-        if(camera.position.y < lowerBound || camera.position.y > upperBound) {
+        if (camera.position.y < lowerBound || camera.position.y > upperBound) {
           switchDirection = !switchDirection;
         }
-        if(switchDirection) {
+        if (switchDirection) {
           camera.position.y -= increment;
           camera.rotation.y -= 0.01;
           camera.rotation.x -= 0.01;
@@ -39,15 +52,15 @@ document.onreadystatechange = function () {
 
         var rotationBound = Math.PI / 2;
         var incrementZ = 0.02;
-        if(freqAvg > 80) {
+        if (freqAvg > 80) {
           rotationZ = !rotationZ;
-          if(freqAvg > 85) {
+          if (freqAvg > 85) {
             var temp = ["#9F8AD6", "#F7488D", "#F0B7DC", "#F6BD9E", "#DB8ED6", "#000000"];
-            var col = temp[Math.floor(Math.random()*temp.length)];
+            var col = temp[Math.floor(Math.random() * temp.length)];
             renderer.setClearColor(col);
           }
         }
-        if(rotationZ) {
+        if (rotationZ) {
           camera.rotation.z -= incrementZ;
         } else {
           camera.rotation.z += incrementZ;
@@ -56,22 +69,21 @@ document.onreadystatechange = function () {
         var h = count * 0.01 % 1;
         var s = 0.2;
         var l = 0.5;
-        ambientLight.color.setHSL (h, s, l);
+        ambientLight.color.setHSL(h, s, l);
 
-        boxGrid.children.forEach(function(child, index) {
+        boxGrid.children.forEach(function (child, index) {
           var k = 0;
           var scale = (frequencyData[k] + audioClient.boost) / 10;
           child.scale.y = (scale < 1 ? 1 : scale);
           k += (k < frequencyData.length ? 1 : 0);
-
         });
+
       });
     });
-  }
-};
+}
 
 function getRandom(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function init() {
@@ -79,12 +91,12 @@ function init() {
   this.clock = new THREE.Clock();
 
   colors = {
-    "purple" : "#9F8AD6",
-    "bright_pink" : "#F7488D",
-    "light_pink" : "#F0B7DC",
-    "blue" : "#65D3F8",
-    "orange" : "#F6BD9E",
-    "pink" : "#DB8ED6"
+    "purple": "#9F8AD6",
+    "bright_pink": "#F7488D",
+    "light_pink": "#F0B7DC",
+    "blue": "#65D3F8",
+    "orange": "#F6BD9E",
+    "pink": "#DB8ED6"
   };
 
   pinkDirectionalLight = getDirectionalLight(1, colors.pink);
@@ -111,7 +123,7 @@ function init() {
   // scene.add(helper);
   scene.add(ambientLight);
 
-  this.camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 1, 1000);
+  this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
 
   camera.position.x = 0;
   camera.position.y = 100;
@@ -121,12 +133,13 @@ function init() {
   this.renderer = new THREE.WebGLRenderer();
   renderer.shadowMap.enabled = true;
   renderer.setSize(window.innerWidth, window.innerHeight);
-  document.getElementById("webgl").appendChild(renderer.domElement);
-
-  document.getElementsByClassName("loader-container")[0].style.visibility = "hidden";
-  showControls();
 
   this.controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+  // show visualization and hide loader
+  document.getElementById("webgl").appendChild(renderer.domElement);
+  showControls();
+  document.getElementsByClassName("loader-container")[0].style.visibility = "hidden";
 };
 
 function getBox(w, h, d, col) {
@@ -144,23 +157,23 @@ function getBox(w, h, d, col) {
 
 function getBoxGrid(amount, separationMultiplier) {
   var group = new THREE.Group();
-  for (var i=0; i<amount; i++) {
-    var col = i%2 == 0 ? colors.pink : colors.bright_pink;
+  for (var i = 0; i < amount; i++) {
+    var col = i % 2 == 0 ? colors.pink : colors.bright_pink;
     var obj = getBox(1, 1, 1, col);
     obj.position.x = i * separationMultiplier;
-    obj.position.y = obj.geometry.parameters.height/2;
+    obj.position.y = obj.geometry.parameters.height / 2;
     group.add(obj);
-    for (var j=1; j<amount; j++) {
-      var col = j%2 == 0 ? colors.pink : colors.bright_pink;
+    for (var j = 1; j < amount; j++) {
+      var col = j % 2 == 0 ? colors.pink : colors.bright_pink;
       var obj = getBox(1, 1, 1, col);
       obj.position.x = i * separationMultiplier;
-      obj.position.y = obj.geometry.parameters.height/2;
+      obj.position.y = obj.geometry.parameters.height / 2;
       obj.position.z = j * separationMultiplier;
       group.add(obj);
     }
   }
-  group.position.x = -(separationMultiplier * (amount-1))/2;
-  group.position.z = -(separationMultiplier * (amount-1))/2;
+  group.position.x = -(separationMultiplier * (amount - 1)) / 2;
+  group.position.z = -(separationMultiplier * (amount - 1)) / 2;
   return group;
 }
 
@@ -195,12 +208,12 @@ function getAmbientLight(intensity, color) {
   return light;
 }
 
-document.getElementById("mute").onclick = function() {
+document.getElementById("mute").onclick = function () {
   toggleMuteControl();
   audioClient.toggleSound();
 }
 
-document.getElementById("unmute").onclick = function() {
+document.getElementById("unmute").onclick = function () {
   toggleUnmuteControl();
   audioClient.toggleSound();
 }

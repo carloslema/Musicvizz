@@ -20,7 +20,6 @@ function setup() {
   for (var i = 0; i < 200; i++) {
     particles.push(new Particle());
   }
-
   amplitude = new p5.Amplitude();
   song.disconnect();
 

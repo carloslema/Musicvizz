@@ -2,29 +2,37 @@ var camera, scene, renderer;
 var mesh;
 var materialShader;
 
-document.onreadystatechange = function () {
-	if (document.readyState == "interactive") {
-		audioClient = new AudioHelper();
-		audioClient.setupAudioProcessing();
-		audioClient.loadFile("../../audio/onemore.mp3")
-			.then(init)
-			.then(animate)
-			.then(() => {
-				audioClient.onAudioProcess(function () {
-					var frequencyData = audioClient.getFrequencyData();
-					var freqAvg = audioClient.getAverage(frequencyData);
-					var floatFreq = audioClient.getFrequencyDataFloat();
 
-					if (materialShader) {
-						var test = (performance.now() / 500);
-						materialShader.uniforms.audioFreq.value = test;
-						mesh.rotation.y += freqAvg / 10000;
-					}
-					renderer.render(scene, camera);
+function startClicked() {
+    // hide button and show loader
+    // TODO: animate button into loader animateStart()
+    document.getElementsByClassName("button-container")[0].style.visibility = "hidden";
+    document.getElementsByClassName("loader-container")[0].style.visibility = "visible";
+    beginAudioProcessing();
+}
 
-				});
-			});
-	}
+function animateStart() {
+    // document.getElementById("start-animate").classList.add('button-animated');
+}
+
+function beginAudioProcessing() {
+    audioClient = new AudioHelper();
+    audioClient.setupAudioProcessing();
+    audioClient.loadFile("../../audio/onemore.mp3")
+        .then(init)
+        .then(() => {
+            audioClient.onAudioProcess(function () {
+				var frequencyData = audioClient.getFrequencyData();
+				var freqAvg = audioClient.getAverage(frequencyData);
+				var floatFreq = audioClient.getFrequencyDataFloat();
+				if (materialShader) {
+					var test = (performance.now() / 500);
+					materialShader.uniforms.audioFreq.value = test;
+					mesh.rotation.y += freqAvg / 10000;
+				}
+				renderer.render(scene, camera);
+            });
+        });
 }
 
 
@@ -88,12 +96,10 @@ function init() {
 	renderer.setPixelRatio(window.devicePixelRatio);
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	
-	document.getElementById("webgl").appendChild(renderer.domElement);
-	document.getElementsByClassName("loader-container")[0].style.visibility = "hidden";
-	showControls();
-	var controls = new THREE.OrbitControls(camera, renderer.domElement);
-	// EVENTS
-	window.addEventListener('resize', onWindowResize, false);
+    // show visualization and hide loader
+    document.getElementById("webgl").appendChild(renderer.domElement);
+    showControls();
+    document.getElementsByClassName("loader-container")[0].style.visibility = "hidden";
 }
 
 function onWindowResize() {
