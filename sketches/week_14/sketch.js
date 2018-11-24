@@ -1,9 +1,6 @@
 var canvas;
-var angle = 0;
-var angleSpeed = 0.01;
 var song;
 var amplitude;
-var torusGroup = [];
 var flag = true;
 var gain;
 var base1;
@@ -31,15 +28,21 @@ function setup() {
     gain.setInput(song);
     gain.connect();
 
+    background(39, 39, 35);
+
     showControls();
     amplitude.setInput(song);
 
-    background(5);
-
     gain.amp(1, 0.5, 0);
-    song.play();
 
 }
+
+function startClicked() {
+    // hide button and show loader
+    document.getElementsByClassName("button-container")[0].style.visibility = "hidden";
+    
+    song.play();
+  }
 
 function draw() {
     if (song.isPlaying()) {

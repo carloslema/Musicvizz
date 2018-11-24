@@ -1,139 +1,103 @@
-var canvas;
-var angle = 0;
-var angleSpeed = 0.01;
+var nTiles = 20;
+var nFrames = 128;
+var phase = 0.0;
+var phaseInc = 1.0 / nFrames;
 var song;
 var amplitude;
-var torusGroup = [];
-var flag = true;
+var level;
 var gain;
-var base1;
-var v0, or, newZ0;
-var angl, angl0, anX, anY;
 
 function preload() {
-    song = loadSound("../../audio/brokenroots.mp3");
+    song = loadSound("../../audio/gone.mp3");
+  }
+
+// Draw sine wave
+function drawWave(w, freq, amp, phase) {
+	push();
+	beginShape();
+	for (var x = -w / 2.0; x < w / 2.0 + 1; x++) {
+		vertex(x, sin(x / w * TAU * freq + phase) * amp);
+	}
+	endShape();
+	pop();
 }
 
 function setup() {
-    canvas = createCanvas(windowWidth, windowHeight, WEBGL);
-    amplitude = new p5.Amplitude();
+  createCanvas(windowWidth, windowHeight);
+  noFill();
+  seed = random(10000);
+  amplitude = new p5.Amplitude();
+  song.disconnect();
 
-    // variable setup
-    angl = 0;
-    or = createVector(0, 0, 0);
-    angl0 = 0.8;
-    anX = 1.5;
-    anY = 0;
+  gain = new p5.Gain();
+  gain.setInput(song);
+  gain.connect();
 
-    song.disconnect();
+  showControls();
+  amplitude.setInput(song);
+  amplitude.smooth(.9);
 
-    gain = new p5.Gain();
-    gain.setInput(song);
-    gain.connect();
+  gain.amp(1,0.5,0);
 
-    showControls();
-    amplitude.setInput(song);
-
-    background(5);
-
-    gain.amp(1, 0.5, 0);
-    song.play();
-
+  song.play();
 }
 
 function draw() {
-    if (song.isPlaying()) {
-        // camera(0, 0, sin(frameCount * 0.01) * (windowHeight / 2));
-        background(39, 39, 35);
-        var level = amplitude.getLevel() * 10;
+	background(16, 16,16);
+	resetMatrix();
+	randomSeed(seed);
+	noiseSeed(seed);
 
-        ang = frameCount * 0.006;
-        rotateX(anX);
-        rotateY(anY);
+	var w = windowWidth / nTiles;
+	var amp = w;
+	var nInc = 0.25;
+	
+	// Create border
+	var thisWidth = windowWidth;
+	var thisHeight = windowWidth;
+	var thisScale = thisWidth / windowWidth;
+	var t = (windowWidth - thisWidth) / 2.0;
+	var sw = w / 2.0 * thisScale;
+	translate(t + sw, t + sw);
 
-        anY += level / 1000;
-        anX += level / 1000;
+	for (var y = 0; y < nTiles; y++) {
+		var yPos = y / nTiles * thisHeight;
+		for (var x = 0; x < nTiles; x++) {
+			push();
+			var n = noise(x * nInc, (y + 1000) * nInc);  // Add noise to phase offset
+			var xPos = x / nTiles * thisWidth;
+			
+			// Move to where sine will be drawn on screen
+			translate(xPos, yPos);
 
-        v0 = createVector(80, 0, 0);
-        newZ0 = createVector(0, 1, 1);
-        base1 = new Base(newZ0, v0);
-        pointLight(196, 197, 181, 0, 0, -2000);
-        directionalLight(252, 251, 250, -1, -1, 0);
-        pointLight(196, 197, 181, 0, 0, 1000);
+			// Rotate approximately half of the sines
+			if (random() < 0.5) {
+				rotate(HALF_PI);
+			}
 
-        // console.log(level);
+			// Reverse direction for approximately half of the sines
+			var thisPhase = phase;
+			if (random() < 0.5) {
+				thisPhase = 1.0 - thisPhase;
+			}
 
-        for (var i = 0; i < 15; i++) {
-            base1.origine = createVector(level * 10 * cos(i * TWO_PI / 12), level * 10 * sin(i * TWO_PI / 12), 0);
-            base1.dessine(level);
-            rotateY(PI / 2 + ang);
-            rotateX(ang);
-            rotateZ(ang);
-        }
-    }
-}
+			// Select between cyan and magents
+			if (random() < 0.5) {
+				stroke(64, 255, 255);
+			} else {
+				stroke(248, 64, 248);
+			}
+			
+			// Select frequency / period of sine
+			var freq = pow(2, random(5));
+			
+			// Draw the wave
+			drawWave(w * 0.5, freq, amp * n * thisScale * 0.5, n * TAU + thisPhase * TAU);
 
-function mouseDragged() {
-    anY += (mouseX - pmouseX) / 100;
-    anX += (-mouseY + pmouseY) / 100;
-}
+			pop();
+		}
+	}
 
-function Base(axez, vorig) {
-    var az = axez.copy();
-    az.normalize();
-    this.z = createVector(az.x, az.y, az.z);
-    this.y = (createVector(-az.y, az.x, 0)).normalize();
-    this.x = (createVector((az.x) * (az.z), (az.y) * (az.z), -sq(az.x) - sq(az.y))).normalize();
-    this.origin = vorig;
-}
-
-Base.prototype.translator = function () {
-    translate(this.origin.x, this.origin.y, this.origin.z);
-}
-
-Base.prototype.rotator = function () {
-    var ax = (this.z).copy();
-    ax.normalize();
-    rotateZ(atan2(ax.y, ax.x));
-    rotateY(acos(ax.z));
-}
-
-Base.prototype.tournerZ = function (agl) {
-    rotateZ(agl);
-}
-
-Base.prototype.coordDans = function (ve0) {
-    // vec0 is a vector in the base b0
-    // vec1 is the column of the coords of vec0 in the new base b1
-    var vec1 = createVector();
-    var vect0 = p5.Vector.sub(ve0, this.origin);
-    vec1.x = p5.Vector.dot(this.x, vect0);
-    vec1.y = p5.Vector.dot(this.y, vect0);
-    vec1.z = p5.Vector.dot(this.z, vect0);
-    return vec1;
-}
-
-Base.prototype.dessine = function (levelFactor) {
-    push();
-    this.translator();
-    this.rotator();
-    this.tournerZ(angl);
-    torus(100, (levelFactor * 0.1) * 30 + 7 * cos(ang * 2), 40, 40);
-    pop();
-}
-
-// resize canvas on windowResized
-function windowResized() {
-    resizeCanvas(windowWidth, windowHeight);
-}
-
-document.getElementById("mute").onclick = function () {
-    gain.amp(0, 0.5, 0);
-    toggleMuteControl();
-
-}
-
-document.getElementById("unmute").onclick = function () {
-    gain.amp(1, 0.5, 0);
-    toggleUnmuteControl();
+	// Update phasor
+	phase += phaseInc;
 }

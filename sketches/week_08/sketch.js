@@ -8,6 +8,7 @@ var flag = true;
 var gain;
 
 function preload() {
+  console.log("hi");
   song = loadSound("../../audio/dancing_in_dark.mp3");
 }
 
@@ -27,8 +28,13 @@ function setup() {
   background(5);
 
   gain.amp(1,0.5,0);
-  song.play();
 
+}
+
+function startClicked() {
+  // hide button and show loader
+  document.getElementsByClassName("button-container")[0].style.visibility = "hidden";
+  song.play();
 }
 
 function draw() {
