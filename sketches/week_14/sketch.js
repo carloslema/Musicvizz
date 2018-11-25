@@ -8,7 +8,12 @@ var v0, or, newZ0;
 var angl, angl0, anX, anY;
 
 function preload() {
-    song = loadSound("../../audio/brokenroots.mp3");
+    song = loadSound("../../audio/brokenroots.mp3", soundReady);
+}
+
+
+function soundReady() {
+    document.getElementsByClassName("button-container-p5")[0].style.visibility = "visible";
 }
 
 function setup() {
@@ -39,8 +44,7 @@ function setup() {
 
 function startClicked() {
     // hide button and show loader
-    document.getElementsByClassName("button-container")[0].style.visibility = "hidden";
-    
+    document.getElementsByClassName("button-container-p5")[0].style.visibility = "hidden";
     song.play();
   }
 

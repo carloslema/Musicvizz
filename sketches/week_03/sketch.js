@@ -9,7 +9,6 @@ var frameCount = 0;
 
 function startClicked() {
   // hide button and show loader
-  // TODO: animate button into loader animateStart()
   document.getElementsByClassName("button-container")[0].style.visibility = "hidden";
   document.getElementsByClassName("loader-container")[0].style.visibility = "visible";
   beginAudioProcessing();

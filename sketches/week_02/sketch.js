@@ -21,9 +21,12 @@ function setup() {
   amplitude.setInput(song);
   amplitude.smooth(.9);
 
-  background(255);
-  gain.amp(1,0.5,0);
+  gain.amp(1, 0.5, 0);
+}
 
+function startClicked() {
+  // hide button and show loader
+  document.getElementsByClassName("button-container-p5")[0].style.visibility = "hidden";
   song.play();
 }
 
@@ -32,26 +35,29 @@ var speed = 0.03;
 var colors = [[170, 193, 199], [142, 192, 193], [135, 202, 216], [150, 201, 192], [140, 160, 152]];
 
 function draw() {
-  level = amplitude.getLevel();
 
-  var color = generateColor(level);
-  fill(color[0], color[1], color[2], 10);
-  rect(0, 0, windowWidth, windowHeight);
+  if (song.isPlaying()) {
+    level = amplitude.getLevel();
 
-  var n = 100;
-  var radius = map(sin(t), -1, 1, 30, windowWidth/5);
-  var angleSteps = TWO_PI / n;
-  var levelFactor = level * 1000;
-  fill(255);
-  for (var i = 0; i < n; i++) {
-    var angle = t + angleSteps * i;
-    var hue = map(sin(angle/2), -1, 1, 0, 125);
-    fill(hue, 210, 210);
-    var x = width / 2 + sin(angle) * radius;
-    var y = height / 2 + cos(angle) * radius;
-    ellipse(x, y, level * 1000, level * 1000);
+    var color = generateColor(level);
+    fill(color[0], color[1], color[2], 10);
+    rect(0, 0, windowWidth, windowHeight);
+
+    var n = 100;
+    var radius = map(sin(t), -1, 1, 30, windowWidth / 5);
+    var angleSteps = TWO_PI / n;
+    var levelFactor = level * 1000;
+    fill(255);
+    for (var i = 0; i < n; i++) {
+      var angle = t + angleSteps * i;
+      var hue = map(sin(angle / 2), -1, 1, 0, 125);
+      fill(hue, 210, 210);
+      var x = width / 2 + sin(angle) * radius;
+      var y = height / 2 + cos(angle) * radius;
+      ellipse(x, y, level * 1000, level * 1000);
+    }
+    t += speed;
   }
-  t += speed;
 }
 
 // resize canvas on windowResized
@@ -77,13 +83,13 @@ function generateColor(level) {
   return color;
 }
 
-document.getElementById("mute").onclick = function() {
-  gain.amp(0,0.5,0);
+document.getElementById("mute").onclick = function () {
+  gain.amp(0, 0.5, 0);
   toggleMuteControl();
 
 }
 
-document.getElementById("unmute").onclick = function() {
-  gain.amp(1,0.5,0);
+document.getElementById("unmute").onclick = function () {
+  gain.amp(1, 0.5, 0);
   toggleUnmuteControl();
 }

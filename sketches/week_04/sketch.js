@@ -30,7 +30,7 @@ function setup() {
 
 function startClicked() {
   // hide button and show loader
-  document.getElementsByClassName("button-container")[0].style.visibility = "hidden";
+  document.getElementsByClassName("button-container-p5")[0].style.visibility = "hidden";
   song.play();
 }
 

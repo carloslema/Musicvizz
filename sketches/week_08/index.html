@@ -12,17 +12,17 @@
   <link rel="shortcut icon" href="../../favicon.png">
   <link rel="stylesheet" type="text/css" href="../../css/loader.css" />
   <link rel="stylesheet" type="text/css" href="../../css/controls.css" />
-  <style> html, body {background-color: #000; overflow: none;} </style>
+  <style> html, body {background-color: #000; width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;} </style>
 </head>
 
 <body>
-  <div class="button-container">
-    <button onclick="startClicked()" id="start-animate" class="start-button">start</button>
-  </div>
-  <div id="p5_loading" class="loadingclass loader-container">
+  <div id="p5_loading" class="loadingclass loader-container-p5">
     <span class="loader">
       <span class="loader-inner"></span>
     </span>
+  </div>
+  <div class="button-container-p5">
+    <button onclick="startClicked()" id="start-animate" class="start-button">start</button>
   </div>
   <div id="mute" class="control"></div>
   <div id="unmute" class="control"></div>

@@ -74,12 +74,20 @@ body {
     visibility: hidden;
 }
 
+.loader-container-p5 {
+    text-align: center;
+    z-index: 1000;
+    height: 100%;
+}
+
 .loader {
     display: inline-block;
     width: 40px;
     height: 40px;
     position: relative;
+    z-index:  1000;
     top: 45%;
+    background-color:  white;
     border: 4px solid #FFF;
     animation: loader 2s infinite ease;
 }
@@ -96,7 +104,16 @@ body {
     display: flex;
     position: absolute;
     align-items: center;
+    visibility: visible;
 }
+
+.button-container-p5 {
+    display: flex;
+    position: absolute;
+    align-items: center;
+    visibility: visible;
+}
+
 
 .start-button {
     padding: 10px 40px;
@@ -165,6 +182,14 @@ body {
         display: block;
         justify-content: left;
         position: absolute;
+        align-items: center;
+    }
+
+    .button-container-p5 {
+        display: block;
+        justify-content: left;
+        position: absolute;
+        visibility: hidden;
         align-items: center;
     }
     
