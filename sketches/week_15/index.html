@@ -21,20 +21,23 @@
       
     body {
       margin: 0;
-      display: flex;
+      /* display: flex; */
       /* This centers our sketch horizontally. */
-      justify-content: center;
+      /* justify-content: center; */
       /* This centers our sketch vertically. */
-      align-items: center;
+      /* align-items: center; */
       }
   </style>
 </head>
 
 <body>
-  <div id="p5_loading" class="loadingclass loader-container">
+  <div id="p5_loading" class="loadingclass loader-container-p5">
     <span class="loader">
       <span class="loader-inner"></span>
     </span>
+  </div>
+  <div class="button-container-p5">
+    <button onclick="startClicked()" id="start-animate" class="start-button">start</button>
   </div>
   <div id="mute" class="control"></div>
   <div id="unmute" class="control"></div>
@@ -47,13 +50,14 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/addons/p5.sound.min.js"></script>
   <script src="../../js/bodymovin.js"></script>
   <script src="../../js/controls.js"></script>
+  <script src="../../js/dat.gui.min.js"></script>
   <script language="javascript" type="text/javascript" src="sketch.js"></script>
   <script>
     (function (i, s, o, g, r, a, m) {
-    i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
-      (i[r].q = i[r].q || []).push(arguments)
-    }, i[r].l = 1 * new Date(); a = s.createElement(o),
-      m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+      i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date(); a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
     })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
     ga('create', 'UA-93516678-1', 'auto');
     ga('send', 'pageview');

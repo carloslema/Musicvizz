@@ -50,7 +50,6 @@ function startClicked() {
 
 function draw() {
     if (song.isPlaying()) {
-        // camera(0, 0, sin(frameCount * 0.01) * (windowHeight / 2));
         background(39, 39, 35);
         var level = amplitude.getLevel() * 10;
 
