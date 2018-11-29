@@ -184,3 +184,14 @@ function smoothPoint(spectrum, index, numberOfNeighbors) {
 
   return val;
 }
+
+document.getElementById("mute").onclick = function () {
+  gain.amp(0, 0.5, 0);
+  toggleMuteControl();
+
+}
+
+document.getElementById("unmute").onclick = function () {
+  gain.amp(1, 0.5, 0);
+  toggleUnmuteControl();
+}
