@@ -14,10 +14,6 @@ function startClicked() {
   beginAudioProcessing();
 }
 
-function animateStart() {
-  // document.getElementById("start-animate").classList.add('button-animated');
-}
-
 function beginAudioProcessing() {
   audioClient = new AudioHelper();
   audioClient.setupAudioProcessing();
