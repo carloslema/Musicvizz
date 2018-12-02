@@ -1,4 +1,4 @@
-# Weekly Motion Graphics
+# Music Visualizations
 
 [![License: MIT License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/MIT)
 
@@ -17,7 +17,7 @@
 <img style="float:left" src="img/demo4.gif?raw=true">
 <img style="float:left" src="img/demo3.gif?raw=true">
 </div>
-<div style="text-align:center;">Checkout all the sketches at <b><i><a target="_blank" href ="http://wklymotion.com/">wklymotion.com</a></i></b></div>
+<div style="text-align:center;">Checkout all the sketches at <b><i><a target="_blank" href ="http://musicvizz.com/">musicvizz.com</a></i></b></div>
 
 ## Credits
 - [three.js](https://p5js.org/)

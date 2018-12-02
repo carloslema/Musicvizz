@@ -1,126 +1,159 @@
-var camera, scene, renderer;
-var mesh;
-var materialShader;
+// Define drawing variables here
+var fft;
+var level;
 
+// sketch variables
+var smoothing = 0;
+var count = 256;
+var dots = [];
+var dotCount = count;
+
+var amplitude;
+var gain;
+var song;
+
+function preload() {
+  song = loadSound("../../audio/idont.mp3");
+}
 
 function startClicked() {
     // hide button and show loader
-    // TODO: animate button into loader animateStart()
-    document.getElementsByClassName("button-container")[0].style.visibility = "hidden";
-    document.getElementsByClassName("loader-container")[0].style.visibility = "visible";
-    beginAudioProcessing();
-}
-
-function animateStart() {
-    // document.getElementById("start-animate").classList.add('button-animated');
-}
-
-function beginAudioProcessing() {
-    audioClient = new AudioHelper();
-    audioClient.setupAudioProcessing();
-    audioClient.loadFile("../../audio/onemore.mp3")
-        .then(init)
-        .then(() => {
-            audioClient.onAudioProcess(function () {
-				var frequencyData = audioClient.getFrequencyData();
-				var freqAvg = audioClient.getAverage(frequencyData);
-				var floatFreq = audioClient.getFrequencyDataFloat();
-				if (materialShader) {
-					var test = (performance.now() / 500);
-					materialShader.uniforms.audioFreq.value = test;
-					mesh.rotation.y += freqAvg / 10000;
-				}
-				renderer.render(scene, camera);
-            });
-        });
-}
-
-
-function init() {
-	camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
-	camera.position.z = 2000;
-	camera.position.y = 2500;
-	scene = new THREE.Scene();
-	var material = new THREE.MeshNormalMaterial();
-	// var gui = new dat.GUI();
-	// gui.addFolder('Camera Position');
-	// gui.add(camera.position, 'x', -2000, 2000);
-	// gui.add(camera.position, 'y', -2000, 2000);
-	// gui.add(camera.position, 'z', -2000, 2000);
-	// gui.addFolder('Camera Rotation');
-	// gui.add(camera.rotation, 'x', - Math.PI, Math.PI);
-	// gui.add(camera.rotation, 'y', - Math.PI, Math.PI);
-	// gui.add(camera.rotation, 'z', - Math.PI, Math.PI);
-	material.onBeforeCompile = function (shader) {
-		shader.uniforms.audioFreq = { value: 0 };
-		shader.uniforms.factor = { value: 0 };
-		shader.vertexShader = 'uniform float audioFreq;\n' + 'uniform float factor;\n' + shader.vertexShader;
-		shader.vertexShader = shader.vertexShader.replace(
-			'#include <begin_vertex>',
-			[
-				'float theta = sin( audioFreq + position.y ) / 9.0;',
-				'float c = cos( theta );',
-				'float s = sin( theta );',
-				'mat3 m = mat3( c, 0, s, 0, 1, 0, -s, 0, c );',
-				// 'mat3 m = mat3(0, 1, 0, -s, 0, c, c, 0, s);',
-				'vec3 transformed = vec3( position ) * m;',
-				'vNormal = vNormal * m;'
-			].join('\n')
-		);
-		materialShader = shader;
-	};
-	var loader = new THREE.GLTFLoader();
-	loader.load('head.glb', function (gltf) {
-		mesh = new THREE.Mesh(gltf.scene.children[0].geometry, material);
-		mesh.position.y = -1100;
-		mesh.rotation.x = -0.75;
-		mesh.position.z = 1600;
-		mesh.rotation.x = -0.80;
-		// gui.addFolder('Mesh Position');
-		// gui.add(mesh.position, 'x', -4000, 5000).step(1);
-		// gui.add(mesh.position, 'y', -4000, 5000).step(1);
-		// gui.add(mesh.position, 'z', -4000, 5000).step(1);
-		// gui.addFolder('Mesh Rotation');
-		// gui.add(mesh.rotation, 'x', - Math.PI, Math.PI);
-		// gui.add(mesh.rotation, 'y', - Math.PI, Math.PI);
-		// gui.add(mesh.rotation, 'z', - Math.PI, Math.PI);
-		// gui.addFolder('Mesh Scale');
-		// gui.add(mesh.scale, 'x', - Math.PI * 100, Math.PI * 100);
-		// gui.add(mesh.scale, 'y', - Math.PI * 100, Math.PI * 100);
-		// gui.add(mesh.scale, 'z', - Math.PI * 100, Math.PI * 100);
-		mesh.scale.setScalar(100);
-		scene.add(mesh);
-	});
-
-	renderer = new THREE.WebGLRenderer({ antialias: true });
-	renderer.setPixelRatio(window.devicePixelRatio);
-	renderer.setSize(window.innerWidth, window.innerHeight);
-	
-    // show visualization and hide loader
-    document.getElementById("webgl").appendChild(renderer.domElement);
-    showControls();
-    document.getElementsByClassName("loader-container")[0].style.visibility = "hidden";
-}
-
-function onWindowResize() {
-	var width = window.innerWidth;
-	var height = window.innerHeight;
-	camera.aspect = width / height;
-	camera.updateProjectionMatrix();
-	renderer.setSize(width, height);
-}
-
-function animate() {
-	requestAnimationFrame(animate);
-}
-
-document.getElementById("mute").onclick = function() {
-	toggleMuteControl();
-	audioClient.toggleSound();
+    document.getElementsByClassName("button-container-p5")[0].style.visibility = "hidden";
+    song.play();
   }
   
-  document.getElementById("unmute").onclick = function() {
-	toggleUnmuteControl();
-	audioClient.toggleSound();
+// treat trackReady as a second "setup" -- anything that should be in setup
+// but should only happen once the song has been loaded should go here
+// otherwise setup will fail
+// ie - (amplitude should be set up here if applicable)
+function setup() {
+    // visual set up - not dependent on song at all
+    createCanvas(windowWidth, windowHeight);
+
+    amplitude = new p5.Amplitude();
+    amplitude.smooth(0.9);
+    song.disconnect();
+
+    gain = new p5.Gain();
+    gain.setInput(song);
+    gain.connect();
+
+    showControls();
+    amplitude.setInput(song);
+
+    fft = new p5.FFT(smoothing, count);
+    fft.setInput(song);
+
+    colorMode(HSB, 255);
+    noStroke();
+
+    gain.amp(1, 0.5, 0);
+
+    // create dots
+    for (var x = 0; x < dotCount; x++) {
+        var dot = new Dot(x);
+        dots.push(dot);
+    }
+}
+
+function draw() {
+
+    // dark gray
+    background(0, 0, 20, 20);
+
+    // flag = true -- the song has been successfully loaded
+    if (song.isPlaying()) {
+
+        level = amplitude.getLevel();
+        // translate all x / y coordinates to the center of the screen
+        translate(width / 2, height / 2);
+
+        var spectrum = fft.analyze(count);
+
+        var center = createVector(windowWidth / 2, windowHeight / 2);
+
+        for (var x = 0; x < dotCount; x++) {
+            var fftAmp = spectrum[x];
+            dots[x].seek(fftAmp);
+            dots[x].update();
+            dots[x].display();
+        }
+
+    }
+}
+
+function Dot(index) {
+    this.index = index;
+    this.location = createVector(0, 0);
+
+    var angle = map(index, 0, dotCount, 0, TWO_PI);
+
+    this.angle = p5.Vector.fromAngle(angle);
+
+    this.velocity = p5.Vector.random2D();
+    this.acceleration = createVector(0, 0);
+
+    this.maxforce = random(0.15, 0.20);
+    this.maxspeed = random(3, 4); // dot speed
+
+    this.r = 5; // dot radius
+}
+
+Dot.prototype.seek = function (fftAmp) {
+    // angle
+    var newTarget = createVector(this.angle.x, this.angle.y);
+    newTarget.mult(fftAmp);
+
+    var desired = p5.Vector.sub(newTarget, this.location);
+    desired.normalize();
+    desired.mult(this.maxspeed);
+
+    // Steering = desired - velocity
+    var steer = p5.Vector.sub(desired, this.velocity);
+    steer.limit(this.maxforce);
+
+    this.acceleration.add(steer);
+};
+
+Dot.prototype.update = function () {
+    // update velocity
+    this.velocity.add(this.acceleration);
+
+    // limit speed
+    this.velocity.limit(this.maxspeed);
+    this.location.add(this.velocity);
+
+    // reset acceleration
+    this.acceleration.mult(0);
+
+    this.checkEdges();
+};
+
+Dot.prototype.display = function () {
+    ellipse(this.location.x, this.location.y, this.r, this.r);
+};
+
+// prevent objects from flying off screen
+Dot.prototype.checkEdges = function () {
+    var x = this.location.x;
+    var y = this.location.y;
+    if (x > width || x < 0 || y > height || y < 0) {
+        x = width / 2;
+        y = height / 2;
+    }
+};
+
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+}
+
+document.getElementById("mute").onclick = function () {
+    gain.amp(0, 0.5, 0);
+    toggleMuteControl();
+  }
+  
+  document.getElementById("unmute").onclick = function () {
+    gain.amp(1, 0.5, 0);
+    toggleUnmuteControl();
   }
   
