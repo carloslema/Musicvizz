@@ -90,3 +90,31 @@ body {
 		grid-column: span 3;
 	}
 }
+
+.bbb {
+	align-items:center;
+}
+
+ 
+@media only screen and (max-width: 40em) {
+	.content__text {
+		font-size: 1.50rem;
+		padding: 0 5vw 0 5vw;
+		line-height: 1.75;
+		color: var(--color-text);
+	}
+
+	.sketch-video {
+		width: 250px;
+		height: 250px;
+		margin: 20px;
+		border-radius: 30px;
+		-webkit-box-shadow: 9px 10px 21px -3px rgba(20, 20, 20,0.65);
+		-moz-box-shadow: 9px 10px 21px -3px rgba(20, 20, 20,0.65);
+		box-shadow: 9px 10px 21px -3px rgba(20, 20, 20,0.65);
+	}
+	.sketch-links {
+		text-align: center;
+		padding-top: 20px;
+	}
+ }
