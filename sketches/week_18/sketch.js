@@ -6,9 +6,10 @@ var width = window.innerWidth,
 
 var point = new THREE.Vector2(0.8, 0.5);
 
+var startButton = document.getElementById( 'start-animate' );
+startButton.addEventListener( 'click', startClicked );
+
 function startClicked() {
-  // hide button and show loader
-  // TODO: animate button into loader animateStart()
   document.getElementsByClassName("button-container")[0].style.visibility = "hidden";
   document.getElementsByClassName("loader-container")[0].style.visibility = "visible";
   beginAudioProcessing();
