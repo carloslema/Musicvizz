@@ -10,7 +10,8 @@ function AudioHelper() {
 
 AudioHelper.prototype.setupAudioProcessing = function () {
 	// Get audio context
-	this.audioContext = new AudioContext();
+	var AudioContextNow = window.AudioContext || window.webkitAudioContext;    
+    this.audioContext = new AudioContextNow();
 
 	this.isMuted = false;
 	this.boost = 0;
