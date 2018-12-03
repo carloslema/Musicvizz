@@ -19,7 +19,7 @@ body {
 }
 
 
-.sketch-video {
+.sketch-item {
 	width: 300px;
 	height: 300px;
 	margin: 20px;
@@ -91,11 +91,10 @@ body {
 	}
 }
 
-.bbb {
-	align-items:center;
+.sketch-img {
+	display: none;
 }
 
- 
 @media only screen and (max-width: 40em) {
 	.content__text {
 		font-size: 1.50rem;
@@ -104,7 +103,7 @@ body {
 		color: var(--color-text);
 	}
 
-	.sketch-video {
+	.sketch-item {
 		width: 250px;
 		height: 250px;
 		margin: 20px;
@@ -116,5 +115,13 @@ body {
 	.sketch-links {
 		text-align: center;
 		padding-top: 20px;
+	}
+
+	.sketch-img {
+		display: inline-block !important;
+	}
+
+	.sketch-video {
+		display: none !important;
 	}
  }
