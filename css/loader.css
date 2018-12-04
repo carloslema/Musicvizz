@@ -189,7 +189,6 @@ body {
         display: block;
         justify-content: left;
         position: absolute;
-        visibility: hidden;
         align-items: center;
     }
     
@@ -202,6 +201,7 @@ body {
         text-transform: uppercase;
         font-family: csBold;
         margin-top: 45vh;
+        z-index: 1000;
         margin-left: 33vw;
         border: none;
     }
