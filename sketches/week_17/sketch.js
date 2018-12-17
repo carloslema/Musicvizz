@@ -5,14 +5,9 @@ var materialShader;
 
 function startClicked() {
     // hide button and show loader
-    // TODO: animate button into loader animateStart()
     document.getElementsByClassName("button-container")[0].style.visibility = "hidden";
     document.getElementsByClassName("loader-container")[0].style.visibility = "visible";
     beginAudioProcessing();
-}
-
-function animateStart() {
-    // document.getElementById("start-animate").classList.add('button-animated');
 }
 
 function beginAudioProcessing() {
@@ -38,8 +33,8 @@ function beginAudioProcessing() {
 
 function init() {
 	camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
-	camera.position.z = 2000;
-	camera.position.y = 2500;
+	camera.position.z = 3000;
+	camera.position.y = 250;
 	scene = new THREE.Scene();
 	var material = new THREE.MeshNormalMaterial();
 	// var gui = new dat.GUI();
@@ -62,7 +57,6 @@ function init() {
 				'float c = cos( theta );',
 				'float s = sin( theta );',
 				'mat3 m = mat3( c, 0, s, 0, 1, 0, -s, 0, c );',
-				// 'mat3 m = mat3(0, 1, 0, -s, 0, c, c, 0, s);',
 				'vec3 transformed = vec3( position ) * m;',
 				'vNormal = vNormal * m;'
 			].join('\n')
@@ -72,10 +66,10 @@ function init() {
 	var loader = new THREE.GLTFLoader();
 	loader.load('head.glb', function (gltf) {
 		mesh = new THREE.Mesh(gltf.scene.children[0].geometry, material);
-		mesh.position.y = -1100;
+		mesh.position.y = -1300;
 		mesh.rotation.x = -0.75;
-		mesh.position.z = 1600;
-		mesh.rotation.x = -0.80;
+		mesh.position.z = 150;
+		mesh.rotation.x = 0.15;
 		// gui.addFolder('Mesh Position');
 		// gui.add(mesh.position, 'x', -4000, 5000).step(1);
 		// gui.add(mesh.position, 'y', -4000, 5000).step(1);
