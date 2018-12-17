@@ -4036,7 +4036,7 @@ tQuery.World.register('addBoilerplate', function(opts){
 	console.assert( this.hasBoilerplate() !== true );
 	// handle parameters	
 	opts	= tQuery.extend(opts, {
-		stats		: true,
+		stats		: false,
 		cameraControls	: true,
 		windowResize	: true,
 		screenshot	: true,

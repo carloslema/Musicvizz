@@ -38,8 +38,6 @@ emitter = Fireworks.createEmitter({ nParticles: 5 })
     }
     newScale = Math.round(newScale * 10) / 10
     object3d.scale.multiplyScalar(newScale);
-    console.log("scale" + newScale);
-    console.log("avg" + freqAvg);
     delta = deltaTime;
   }).back()
   .friction(0.85)
