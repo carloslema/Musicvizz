@@ -1,10 +1,3 @@
-/**
- *  Re-group the FFT into more meaningful values by 
- *  splitting into one-third-octave bands,
- *  and by smoothing each point with its neighbors.
- *  
- *  Plot over time.
- */
 var song;
 var amplitude;
 var level;
@@ -25,17 +18,13 @@ function preload() {
 function startClicked() {
   document.getElementsByClassName("button-container-p5")[0].style.visibility = "hidden";
   song.play();
-  // fft.setInput(song);
 }
 
 function setup() {
-  // background(220, 220, 220);
-  // background("#462F4E");
   background("#CCC6FF");
 
   cnv = createCanvas(windowWidth, windowHeight);
   noFill();
-  // stroke(100, 255, 222);
   stroke(255);
 
   amplitude = new p5.Amplitude();
@@ -53,9 +42,6 @@ function setup() {
   fft = new p5.FFT(0.9, 1024);
 
   gain.amp(1, 0.5, 0);
-  // colors = ['#1623CF', '#66F5FF', '#9002F5', '#FE01EA', '#FF0178'];
-  // colors = ['#E6B831', '#8C2B55'];
-  // colors = ['#E6B831'];
   colors = ['#6AA399'];
 }
 
@@ -69,16 +55,10 @@ function draw() {
     var scaledSpectrum = splitOctaves(spectrum, 12);
     var len = scaledSpectrum.length;
 
-    // var col = colors[Math.floor(Math.random() * colors.length)];
-    // stroke(col);
     stroke(255);
     strokeWeight(level);
 
-    // background(200, 200, 200, 1);
-    // background(70, 47, 78);
-    // background("#462F4E");
     background("#CCC6FF");
-    // background("#FFF882")
     // copy before clearing the background
     copy(cnv, 0, 0, windowWidth, windowHeight, 0, level, windowWidth, windowHeight);
 

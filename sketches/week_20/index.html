@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Flashing Lights - Kanye West</title>
+	<meta name="description" content="Weekly motion graphic experiments"/>
+	<meta name="keywords" content="motion, graphics, suraya, shivji, wklymotion, animation"/>
+	<meta name="author" content="Suraya Shivji"/>
+	<link rel="shortcut icon" href="../../favicon.png">
+	<link rel="stylesheet" type="text/css" href="../../css/loader.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/controls.css"/>
+	<style type="text/css"> html, body {margin: 0; padding: 0; overflow: hidden;} </style>
+	<style>
+        body {
+            background-color: #5C3084;
+            margin: 0px;
+            overflow: hidden;
+            background-image: -webkit-gradient(#5C3084,#94377F,#D78867);
+            /* Safari 5.1, iOS 5.0-6.1, Chrome 10-25, Android 4.0-4.3 */
+            background-image: -webkit-linear-gradient(#5C3084,#94377F,#D78867);
+            /* Firefox 3.6 - 15 */
+            background-image: -moz-linear-gradient(#5C3084,#94377F,#D78867);
+            /* Opera 11.1 - 12 */
+            background-image: -o-linear-gradient(#5C3084,#94377F,#D78867);
+            /* Opera 15+, Chrome 25+, IE 10+, Firefox 16+, Safari 6.1+, iOS 7+, Android 4.4+ */
+            background-image: linear-gradient(#5C3084,#94377F,#D78867);
+        }
+	</style>
+</head>
+<body>
+	<div id="webgl"></div>
+	<div class="button-container">
+		<button id="start-animate" class="start-button">start</button>
+	</div>
+	<div class="loader-container">
+			<span class="loader">
+				<span class="loader-inner"></span>
+			</span>
+	</div>
+	<div id="mute" class="control"></div>
+	<div id="unmute" class="control"></div>
+	<!-- <div id="prev" onmousedown="prevMouseDown()" onmouseup="prevMouseUp('08')" class="control"></div>
+	<div id="next" onmousedown="nextMouseDown()" onmouseup="nextMouseUp('10')" class="control"></div> -->
+	<div id="song-info" class="control">
+		<a href="https://open.spotify.com/album/3DZOxs3mU2XXHNxukWelIi" target="_blank"><img src="../../img/music.png"></a>
+	</div>
+	<div id="back-home"j class="control"><a href="../../index.html"><img src="../../img/back.png"></a></div>
+	<script src="../../js/three.js"></script>
+	<script src="../../js/TweenMax.min.js"></script>
+	<script src="../../js/AudioHelper.js"></script>
+	<script src="../../js/perlin.js"></script>
+	<script src="../../js/bodymovin.js"></script>
+	<script src="../../js/controls.js"></script>
+	<script src="sketch.js"></script>
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+		ga('create', 'UA-93516678-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+</body>
+</html>
