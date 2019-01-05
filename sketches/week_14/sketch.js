@@ -79,11 +79,6 @@ function draw() {
     }
 }
 
-function mouseDragged() {
-    anY += (mouseX - pmouseX) / 100;
-    anX += (-mouseY + pmouseY) / 100;
-}
-
 function Base(axez, vorig) {
     var az = axez.copy();
     az.normalize();
@@ -124,7 +119,8 @@ Base.prototype.dessine = function (levelFactor) {
     this.translator();
     this.rotator();
     this.tournerZ(angl);
-    torus(100, (levelFactor * 0.1) * 30 + 7 * cos(ang * 2), 40, 40);
+    torus(100, (levelFactor * 0.1) * 30 + 7 * cos(ang * 2), 24, 16);
+    // torus(17, 12, 24,16);
     pop();
 }
 
