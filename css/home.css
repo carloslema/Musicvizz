@@ -96,6 +96,10 @@ body {
 }
 
 @media only screen and (max-width: 40em) {
+	.no-mob {
+		display: none;
+		visibility: hidden;
+	}
 	.content__text {
 		font-size: 1.50rem;
 		padding: 0 5vw 0 5vw;

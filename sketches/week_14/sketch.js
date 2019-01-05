@@ -119,8 +119,7 @@ Base.prototype.dessine = function (levelFactor) {
     this.translator();
     this.rotator();
     this.tournerZ(angl);
-    torus(100, (levelFactor * 0.1) * 30 + 7 * cos(ang * 2), 26, 17);
-    // torus(17, 12, 24,16);
+    torus(100, (levelFactor * 0.1) * 30 + 7 * cos(ang * 2), 40, 40);
     pop();
 }
 
