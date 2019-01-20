@@ -42,7 +42,7 @@ body {
 
 .content__text {
 	font-size: 2rem;
-	padding: 0 0 0 10vw;
+	padding: 5vw 0 0 10vw;
 	line-height: 2;
 	color: var(--color-text);
 }
@@ -70,7 +70,7 @@ body {
 
 @media screen and (min-width: 53em) {
 	.frame {
-		position: fixed;
+		position: relative;
 		text-align: left;
 		z-index: 10000;
 		top: 0;
@@ -80,9 +80,9 @@ body {
 		pointer-events: none;
 	}
 	.content {
-		position: fixed;
+		position: relative;
 		margin: 0 auto;
-		padding-top: 20vh;
+		padding: 3vh 0vh;
 		max-width: 750px;
 		text-align: left;
 	}
@@ -94,6 +94,33 @@ body {
 .sketch-img {
 	display: none;
 }
+
+.sketch-links {
+	text-align: center;
+	/* padding-top: 20px; */
+}
+
+.m-link {
+	display: inline;
+}
+
+/* 
+  ##Device = Tablets, Ipads (portrait)
+  ##Screen = B/w 768px to 1024px
+*/
+
+@media (min-width: 768px) and (max-width: 1024px) {
+	.content {
+		position: relative;
+		margin: 0 auto;
+		max-width: 700px;
+		text-align: left;
+	}
+	.content__text {
+		padding: 5vw 0 0 0;
+	}
+}
+  
 
 @media only screen and (max-width: 40em) {
 	.no-mob {
